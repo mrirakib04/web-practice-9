@@ -62,6 +62,7 @@ const HRAddEmployee = () => {
       ...employee,
       hiredBy: user.email,
       companyLogo: company.companyLogo,
+      companyName: company.companyName,
     };
     await AxiosSecure.post("/team", addInTeam);
     // Add the user to the "assigned" collection

@@ -40,7 +40,7 @@ const JoinAsEmployee = () => {
     let image = target.image.files[0];
     const password = target.password.value;
     const birth = target.birth.value;
-    const role = "employee";
+    const role = "Employee";
 
     if (!validatePassword(password)) {
       toast.error(

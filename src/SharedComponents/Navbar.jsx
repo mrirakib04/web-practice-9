@@ -20,8 +20,8 @@ const Navbar = () => {
   const [showProfile, setShowProfile] = useState(false);
   const profileShowHide = () => setShowProfile((prev) => !prev);
 
-  const { data: companyLogo = [] } = useQuery({
-    queryKey: ["companyLogo"],
+  const { data: company = [] } = useQuery({
+    queryKey: ["company"],
     enabled: !!user?.email,
     queryFn: async () => {
       const res = await AxiosSecure.get(`/team/member/${user?.email}`);
@@ -329,7 +329,10 @@ const Navbar = () => {
             className="flex shadow-lg px-1 py-1 bg-white rounded-md border-t-4 border-l-4 border-black rounded-tl-none"
           >
             <img
-              src={companyLogo.companyLogo || NavLogo}
+              data-tooltip-id="my-tooltip"
+              data-tooltip-content={company && company.companyName}
+              data-tooltip-place="bottom"
+              src={company.companyLogo || NavLogo}
               className="w-10 h-10 rounded-md object-cover"
               alt="HR3 logo"
             />
@@ -392,11 +395,14 @@ const Navbar = () => {
                 </button>
               </a>
               {showProfile && (
-                <div className="absolute top-16 right-2 flex flex-col gap-2 py-5 px-3 bg-gray-50 rounded-lg border-2">
-                  <Link to={"/profile"} className="text-lg font-semibold">
-                    {user.displayName}
+                <div className="absolute top-16 right-2 flex flex-col gap-1 py-5 px-3 bg-gray-50 rounded-lg border-2">
+                  <Link
+                    to={"/profile"}
+                    className="text-lg font-bold hover:text-black text-gray-700 duration-300"
+                  >
+                    <h2>{user.displayName}</h2>
                   </Link>
-                  <p className="text-lg text-gray-600 font-medium">
+                  <p className="text-base text-gray-600 font-medium">
                     {user.email}
                   </p>
 

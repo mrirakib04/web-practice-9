@@ -24,12 +24,11 @@ const HREmployeeList = () => {
     console.log(member, hiredBy, withoutHREmail);
     Swal.fire({
       title: "Are you sure?",
-      text: "You won't be able to revert this!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonText: "Yes, remove him!",
     }).then(async (result) => {
       if (result.isConfirmed) {
         await AxiosSecure.post("/unemployed", withoutHREmail);
@@ -52,10 +51,10 @@ const HREmployeeList = () => {
       </Helmet>
       <div className="flex flex-col items-center">
         <h2 className="lg:text-4xl sm:text-3xl text-2xl font-semibold">
-          Your Employees List
+          Your Employees
         </h2>
-        <p className="sm:text-lg font-medium text-cyan-600 mt-2">
-          View your employees details.
+        <p className="sm:text-lg font-medium text-cyan-700 mt-1">
+          Explore detailed information about your employees.
         </p>
       </div>
       {team.length < 0 ? (
@@ -64,44 +63,46 @@ const HREmployeeList = () => {
           <MdReportGmailerrorred className="text-2xl"></MdReportGmailerrorred>
         </p>
       ) : (
-        <div className="w-full container mx-auto px-2 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-10">
+        <div className="lg:w-11/12 w-full container mx-auto px-2 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-10 mt-2">
           {team.map((member) => (
             <div
+              data-aos="zoom-in"
               key={member._id}
-              className="max-w-[300px] p-5 border-2 shadow-lg shadow-purple-300 border-purple-800 rounded-xl w-full flex flex-col gap-2 mx-auto object-cover"
+              className="max-w-[300px] p-5 border-2 border-t-cyan-200 shadow-md hover:shadow-xl duration-200 border-cyan-300 rounded-b-xl w-full flex flex-col mx-auto object-cover shadow-gray-300 bg-gradient-to-b from-cyan-300 via-white to-white"
             >
               <img
                 src={member.image}
                 className="h-40 w-40 rounded-full mx-auto object-cover shadow-lg shadow-gray-300 border-b-2 border-b-gray-400"
                 alt={member.name}
               />
-              <h3
-                data-tooltip-id="my-tooltip"
-                data-tooltip-content={member.name}
-                data-tooltip-place="bottom"
-                className="text-xl font-medium flex gap-1"
-              >
-                <span className="font-bold">Name: </span>
-                <span className="block truncate max-w-none">{member.name}</span>
+              <h3 className="text-2xl font-bold flex gap-1 mt-2">
+                <span
+                  data-tooltip-id="my-tooltip"
+                  data-tooltip-content={member.name}
+                  data-tooltip-place="top"
+                  className="block truncate mx-auto"
+                >
+                  {member.name}
+                </span>
               </h3>
               <p
                 data-tooltip-id="my-tooltip"
                 data-tooltip-content={member.email}
                 data-tooltip-place="bottom"
-                className="text-xl font-medium flex gap-1"
+                className="text-lg font-medium flex gap-1 mt-2"
               >
-                <span className="font-bold">Email: </span>
+                <span className="text-gray-600">Email: </span>
                 <span className="block truncate max-w-none">
                   {member.email}
                 </span>
               </p>
-              <p className="text-xl font-medium">
-                <span className="font-bold">Role: </span>
+              <p className="text-lg font-medium text-black flex gap-1">
+                <span className="text-gray-600">Role:</span>
                 {member.role}
               </p>
               <button
                 onClick={() => handleRemove(member)}
-                className="mt-2 flex items-center gap-2 text-lg font-medium py-1 px-4 mx-auto rounded-lg border-2 border-red-800 transition hover:bg-red-700 hover:text-white"
+                className="mt-4 flex items-center gap-2 text-lg font-medium py-1 px-4 mx-auto rounded-lg border-2 border-red-800 duration-200 hover:bg-red-700 hover:text-white"
               >
                 Remove <FaTrashAlt className="text-xl"></FaTrashAlt>
               </button>

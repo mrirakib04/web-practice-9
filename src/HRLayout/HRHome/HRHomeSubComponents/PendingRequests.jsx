@@ -21,11 +21,12 @@ const PendingRequests = () => {
       const res = await AxiosSecure.get(`/pending/recent/${user?.email}`);
       return res.data;
     },
+    enabled: !!user?.email,
   });
 
   useEffect(() => {
     refetch();
-  }, [user?.email]);
+  }, [user?.email, refetch]);
   console.log("recent requests", PendingRecentRequests, user?.email);
 
   // time
