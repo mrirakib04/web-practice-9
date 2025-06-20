@@ -131,12 +131,12 @@ const PendingRequests = () => {
 
   return (
     <div className="w-full sm:mb-10 mb-5">
-      <div className="w-full flex flex-col items-center">
+      <div className="w-full flex flex-col items-center p-2">
         <h2 className="lg:text-4xl sm:text-3xl text-2xl font-semibold">
           Pending Requests
         </h2>
         <p className="sm:text-lg font-medium text-lime-600 mt-2 text-center">
-          View recent pending asset requests.
+          Browse the latest asset requests currently awaiting approval.
         </p>
       </div>
       {isLoading ? (
@@ -144,59 +144,61 @@ const PendingRequests = () => {
           <DNA></DNA>
         </div>
       ) : PendingRecentRequests?.length > 0 ? (
-        <div className="mt-5 w-full mx-auto px-5 grid lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-4">
+        <div className="lg:w-11/12 mt-5 w-full mx-auto px-5 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4">
           {PendingRecentRequests?.map((request) => (
             <div
               key={request._id}
               className="max-w-[300px] p-2 border-2 shadow-lg shadow-lime-100 border-lime-800 rounded-xl w-full flex flex-col gap-1 mx-auto object-cover"
             >
-              <h2 className="md:text-xl text-lg font-medium">
-                <span className="font-bold">Name: </span>
-                {request.name}
-              </h2>
-              <h2 className="md:text-xl text-lg font-medium">
-                <span className="font-bold">Type: </span>
-                {request.type}
-              </h2>
-              <Divider></Divider>
-              <div className="w-full flex flex-col h-full justify-between gap-1">
+              <div className="w-full flex flex-col gap-1">
+                <h2 className="text-2xl font-medium">{request.name}</h2>
+                <h2 className="text-base font-medium">
+                  <span className="font-medium text-gray-500">Type: </span>
+                  {request.type}
+                </h2>
+                <Divider></Divider>
+              </div>
+              <div className="w-full flex flex-col h-full gap-1">
                 <p
                   data-tooltip-id="my-tooltip"
                   data-tooltip-content={request.requestByName}
                   data-tooltip-place="top"
                   className="cursor-pointer md:text-lg text-base font-medium text-lime-700 block truncate max-w-none"
                 >
-                  <span className="font-bold text-zinc-700">RequestBy: </span>
+                  <span className="font-bold text-black">RequestBy: </span>
                   {request.requestByName}
                 </p>
                 <p
                   data-tooltip-id="my-tooltip"
                   data-tooltip-content={request.requestByEmail}
                   data-tooltip-place="bottom"
-                  className="cursor-pointer md:text-lg text-base font-medium text-zinc-600 block truncate max-w-none"
+                  className="cursor-pointer text-base font-medium text-zinc-600 block truncate max-w-none"
                 >
                   <span className="font-bold text-zinc-700">Email: </span>
                   {request.requestByEmail}
                 </p>
-                <p className="md:text-lg text-base font-medium text-zinc-600">
-                  <span className="font-bold text-zinc-700">Date: </span>
+                <p className="text-base font-medium text-gray-600">
+                  <span className="font-bold text-gray-700">Date: </span>
                   {request.requestDate}
                 </p>
-                <p className="md:text-lg text-base font-medium text-zinc-600">
-                  <span className="font-bold text-zinc-700">Note: </span>
+                <p className="text-base font-medium text-gray-600">
+                  <span className="font-bold text-gray-700">Note: </span>
                   {request.additionalNote || "none"}
                 </p>
-                <p className="md:text-lg text-base font-medium text-zinc-600">
-                  <span className="font-bold text-zinc-700">Status: </span>
+                <p className="text-base font-medium text-zinc-600">
+                  <span className="font-bold text-gray-700">Status: </span>
                   {request.status}
                 </p>
               </div>
               <div className="w-full flex items-center justify-between gap-2">
                 <button
                   onClick={() => handleApprove(request)}
-                  className="text-base mt-2 font-bold transition hover:bg-green-700 border-2 text-green-800 hover:text-white border-green-700 py-1 w-full rounded-full"
+                  className="relative overflow-hidden group text-base mt-2 font-bold border-2 border-green-700 text-green-800 py-1 w-full rounded-full transition-colors duration-300"
                 >
-                  Approve
+                  <span className="relative z-10 transition-colors duration-300 group-hover:text-white">
+                    Approve
+                  </span>
+                  <span className="absolute inset-0 bg-green-700 z-0 transition-transform duration-300 transform -translate-x-full group-hover:translate-x-0"></span>
                 </button>
                 <button
                   onClick={() => handleReject(request)}
