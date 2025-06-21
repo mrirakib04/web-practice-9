@@ -131,7 +131,7 @@ const PendingRequests = () => {
   };
 
   return (
-    <div className="w-full sm:mb-10 mb-5">
+    <div className="w-full mt-10 sm:mb-10 mb-5">
       <div className="w-full flex flex-col items-center p-2">
         <h2 className="lg:text-4xl sm:text-3xl text-2xl font-semibold">
           Pending Requests
@@ -148,18 +148,19 @@ const PendingRequests = () => {
         <div className="lg:w-11/12 mt-5 w-full mx-auto px-5 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4">
           {PendingRecentRequests?.map((request) => (
             <div
+              data-aos="fade-up"
               key={request._id}
-              className="max-w-[300px] p-2 border-2 shadow-lg shadow-lime-100 border-lime-800 rounded-xl w-full flex flex-col gap-1 mx-auto object-cover"
+              className="max-w-[300px] overflow-hidden border-2 shadow-lg shadow-gray-300 border-lime-700 rounded-3xl w-full flex flex-col gap-1 mx-auto object-cover rounded-tl-none rounded-br-none"
             >
-              <div className="w-full flex flex-col gap-1">
-                <h2 className="text-2xl font-medium">{request.name}</h2>
+              <div className="w-full h-full flex flex-col gap-1 bg-lime-700 p-2 text-white">
+                <h2 className="text-2xl font-bold">{request.name}</h2>
                 <h2 className="text-base font-medium">
-                  <span className="font-medium text-gray-500">Type: </span>
+                  <span className="font-semibold text-gray-200">Type: </span>
                   {request.type}
                 </h2>
-                <Divider></Divider>
+                {/* <Divider></Divider> */}
               </div>
-              <div className="w-full flex flex-col h-full gap-1">
+              <div className="w-full flex flex-col h-full gap-1 p-2">
                 <p
                   data-tooltip-id="my-tooltip"
                   data-tooltip-content={request.requestByName}
@@ -191,7 +192,7 @@ const PendingRequests = () => {
                   {request.status}
                 </p>
               </div>
-              <div className="w-full flex items-center justify-between gap-2">
+              <div className="w-full flex items-center justify-between gap-2 p-2">
                 <button
                   onClick={() => handleApprove(request)}
                   className="relative overflow-hidden group text-base mt-2 font-bold border-2 border-green-700 text-green-800 py-1 w-full rounded-full transition-colors duration-300"

@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import {
   Elements,
@@ -11,6 +11,7 @@ import { UserMainContext } from "../../Context/UserContext";
 import { useQuery } from "@tanstack/react-query";
 import PropTypes from "prop-types";
 import { Helmet } from "react-helmet-async";
+import { useLocation, useNavigate } from "react-router";
 
 // Load your Stripe public key
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
@@ -144,6 +145,29 @@ PaymentForm.propTypes = {
 };
 
 const Payment = ({ rerefetchHR }) => {
+  const navigate = useNavigate();
+  const AxiosSecure = useAxiosPrivate();
+  const { user } = useContext(UserMainContext);
+  const location = useLocation();
+  console.log("location", location.pathname);
+
+  const { data: hrForPaymentCheck = [] } = useQuery({
+    queryKey: ["hrForPaymentCheck"],
+    queryFn: async () => {
+      const res = await AxiosSecure.get(`/hr/${user?.email}`);
+      return res.data;
+    },
+    enabled: !!user?.email,
+  });
+  useEffect(() => {
+    if (
+      hrForPaymentCheck?.paymentStatus === "paid" &&
+      location?.pathname === "/hr/payment"
+    ) {
+      navigate("/hr/dashboard/home");
+    }
+  }, [hrForPaymentCheck, navigate, location]);
+
   return (
     <div className="flex justify-center items-center bg-white mt-10 w-full">
       <Helmet>

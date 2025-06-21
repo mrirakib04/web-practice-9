@@ -66,7 +66,7 @@ const MyPendingRequests = () => {
           Pending Request
         </h2>
         <p className="sm:text-lg font-medium text-violet-600 mt-2 text-center">
-          View your pending assets requests.
+          View and manage your current pending asset requests.
         </p>
       </div>
       {isLoading ? (
@@ -77,34 +77,39 @@ const MyPendingRequests = () => {
         <div className="w-full container mx-auto px-2 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-10 mt-5">
           {PendingRequests.map((request) => (
             <div
+              data-aos="fade-up"
+              data-aos-duration="2000"
               key={request._id}
-              className="max-w-[300px] p-5 border-2 shadow-lg shadow-violet-300 border-violet-800 rounded-xl w-full flex flex-col justify-between gap-2 mx-auto"
+              className="max-w-[300px] overflow-hidden border-2 shadow-lg shadow-gray-300 border-violet-800 rounded-xl w-full flex flex-col gap-1 mx-auto rounded-tl-none"
             >
-              <h2 className="md:text-xl text-lg font-medium">
-                <span className="font-bold">Name: </span>
-                {request.name}
-              </h2>
-              <p className="md:text-xl text-lg font-medium text-zinc-600">
-                <span className="font-bold text-zinc-700">Type: </span>
-                {request.type}
-              </p>
-              <p className="md:text-lg text-base font-medium text-zinc-600">
-                <span className="font-bold text-zinc-700">Message: </span>
-                {request.additionalNote || "none"}
-              </p>
-              <p className="md:text-lg text-base font-medium text-zinc-600">
-                <span className="font-bold text-zinc-700">Requested: </span>
-                {request.requestDate}
-              </p>
-              <button
-                onClick={() => handleDelete(request.assetId)}
-                data-tooltip-id="my-tooltip"
-                data-tooltip-content={`Cancel request of ${request.name}`}
-                data-tooltip-place="bottom"
-                className="text-xl mt-2 font-bold transition hover:bg-red-700 border-2 text-red-800 hover:text-white border-red-700 pt-1 pb-2 w-full rounded-full justify-center"
-              >
-                Cancel
-              </button>
+              <div className="w-full bg-purple-700 text-white p-2 h-full">
+                <h2 className="text-2xl font-semibold">{request.name}</h2>
+              </div>
+              <div className="w-full p-2">
+                <p className="text-lg font-medium text-gray-600">
+                  <span className="font-bold text-gray-700">Type: </span>
+                  {request.type}
+                </p>
+                <p className="text-base font-medium text-gray-600">
+                  <span className="font-bold text-gray-700">Message: </span>
+                  {request.additionalNote || "none"}
+                </p>
+                <p className="text-base font-medium text-gray-600">
+                  <span className="font-bold text-gray-700">Requested: </span>
+                  {request.requestDate}
+                </p>
+              </div>
+              <div className="w-full p-2">
+                <button
+                  onClick={() => handleDelete(request.assetId)}
+                  data-tooltip-id="my-tooltip"
+                  data-tooltip-content={`Cancel request of ${request.name}`}
+                  data-tooltip-place="bottom"
+                  className="text-xl mt-2 font-bold duration-300 hover:bg-red-700 border-2 text-red-800 hover:text-white border-red-700 pb-1 w-full rounded-full justify-center"
+                >
+                  Cancel
+                </button>
+              </div>
             </div>
           ))}
         </div>

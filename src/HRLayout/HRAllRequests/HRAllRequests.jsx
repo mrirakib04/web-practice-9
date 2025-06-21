@@ -28,7 +28,7 @@ const HRAllRequests = () => {
 
   useEffect(() => {
     refetch();
-  }, [user?.email]);
+  }, [user?.email, refetch]);
   console.log(PendingRequests);
 
   let displayRequests =

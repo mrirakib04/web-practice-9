@@ -14,9 +14,10 @@ const EmployeeHome = () => {
   const { data: employee = [] } = useQuery({
     queryKey: ["employee"],
     queryFn: async () => {
-      const res = await AxiosSecure.get(`/employee/${user.email}`);
+      const res = await AxiosSecure.get(`/employee/${user?.email}`);
       return res.data;
     },
+    enabled: !!user?.email,
   });
 
   return (

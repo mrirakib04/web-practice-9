@@ -14,17 +14,18 @@ const EmployeeAssetsRequest = () => {
   const [isHoveredFilter, setIsHoveredFilter] = useState(false);
   const [storedAssets, setStoredAssets] = useState([]);
 
-  const { data: employee = [] } = useQuery({
+  const { data: employee = {} } = useQuery({
     queryKey: ["employee"],
     queryFn: async () => {
       const res = await AxiosSecure.get(`/team/member/${user.email}`);
       return res.data;
     },
+    enabled: !!user?.email,
   });
 
   const {
     data: availableAssets = [],
-    refetch,
+    refetch: refetchAvailableAssets,
     isLoading,
   } = useQuery({
     queryKey: ["availableAssets"],
@@ -32,22 +33,33 @@ const EmployeeAssetsRequest = () => {
       const res = await AxiosSecure.get(`/assets/all/${employee.hiredBy}`);
       return res.data;
     },
+    enabled: !!employee?.hiredBy,
   });
 
   useEffect(() => {
-    refetch();
-  }, [employee?.hiredBy]);
+    refetchAvailableAssets();
+    if (storedAssets.length == 0) {
+      setStoredAssets(availableAssets);
+    }
+  }, [
+    employee?.hiredBy,
+    refetchAvailableAssets,
+    availableAssets,
+    storedAssets.length,
+  ]);
 
   let displayAssets =
     (storedAssets.length > 0 ? storedAssets : availableAssets) || [];
 
-  console.log(employee.hiredBy, availableAssets);
+  console.log(employee.hiredBy, displayAssets);
 
   // time
+  let month = null;
+  let year = null;
   const getCurrentDateTime = () => {
     const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, "0");
+    year = now.getFullYear();
+    month = now.getMonth();
     const day = String(now.getDate()).padStart(2, "0");
     let hours = String(now.getHours()).padStart(2, "0");
     const minutes = String(now.getMinutes()).padStart(2, "0");
@@ -64,6 +76,8 @@ const EmployeeAssetsRequest = () => {
     const requestByEmail = user.email;
     const requestFor = asset.owner;
     const requestDate = getCurrentDateTime();
+    const requestMonth = month;
+    const requestYear = year;
     const additionalNote = e.target.message.value;
     const assetId = asset._id;
     const status = "pending";
@@ -76,35 +90,26 @@ const EmployeeAssetsRequest = () => {
       requestByEmail,
       requestFor,
       requestDate,
+      requestMonth,
+      requestYear,
       additionalNote,
       assetId,
       status,
       approveDate,
     };
-    Swal.fire({
-      title: "Are you sure?",
-      text: `You want to request for ${name}`,
-      icon: "info",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Send Request!",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        const postResRequests = await AxiosSecure.post("/requests", reqDoc);
-        const postResPending = await AxiosSecure.post("/pending", reqDoc);
+    const postResRequests = await AxiosSecure.post("/requests", reqDoc);
+    const postResPending = await AxiosSecure.post("/pending", reqDoc);
 
-        if (postResRequests.status === 200 && postResPending.status === 200) {
-          Swal.fire({
-            title: "Requested!",
-            text: `Requested for ${name}.`,
-            icon: "success",
-          });
-          e.target.reset();
-        }
-        console.log(reqDoc, postResRequests, postResPending);
-      }
-    });
+    if (postResRequests.status === 200 && postResPending.status === 200) {
+      Swal.fire({
+        title: "Requested!",
+        text: `Requested for ${name}.`,
+        icon: "success",
+      });
+      e.target.reset();
+      console.log(postResRequests, postResPending);
+    }
+    console.log(reqDoc);
   };
 
   // search asset
@@ -237,54 +242,55 @@ const EmployeeAssetsRequest = () => {
           </div>
         ) : (
           <div className="w-full mx-auto px-5 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 items-center  gap-5 mt-5">
-            {displayAssets?.map((asset) => (
-              <div
-                key={asset._id}
-                className="h-full max-w-xs mx-auto w-full p-2 border-2 flex flex-col gap-1 rounded-md border-orange-600 justify-between"
-              >
-                <h2 className="md:text-xl text-lg font-medium">
-                  <span className="font-bold">Name: </span>
-                  {asset.name}
-                </h2>
-                <p className="md:text-lg text-base font-medium text-zinc-600">
-                  <span className="font-bold text-zinc-700">Type: </span>
-                  {asset.type}
-                </p>
-                <p
-                  className={
-                    asset.quantity > 0
-                      ? "md:text-xl text-lg font-bold text-center text-green-600"
-                      : "md:text-xl text-lg font-bold text-center text-red-600"
-                  }
+            {displayAssets &&
+              displayAssets?.map((asset) => (
+                <div
+                  key={asset._id}
+                  className="h-full max-w-xs mx-auto w-full p-2 border-2 flex flex-col gap-1 rounded-md border-orange-600 justify-between"
                 >
-                  {asset.quantity > 0 ? "Availble" : "Out Of Stock"}
-                </p>
-
-                <form
-                  onSubmit={(e) => handleRequest(e, asset)}
-                  className="w-full flex flex-col items-center gap-2 justify-between"
-                >
-                  <textarea
-                    id="message"
-                    className="w-full min-h-10 placeholder:text-lg placeholder:font-medium text-lg font-medium border-2 rounded-md py-1 px-2"
-                    placeholder="Additional Message"
-                  ></textarea>
-                  <button
-                    disabled={!asset.quantity > 0}
-                    data-tooltip-id="my-tooltip"
-                    data-tooltip-content={`Request for ${asset.name}`}
-                    data-tooltip-place="bottom"
+                  <h2 className="md:text-xl text-lg font-medium">
+                    <span className="font-bold">Name: </span>
+                    {asset.name}
+                  </h2>
+                  <p className="md:text-lg text-base font-medium text-zinc-600">
+                    <span className="font-bold text-zinc-700">Type: </span>
+                    {asset.type}
+                  </p>
+                  <p
                     className={
                       asset.quantity > 0
-                        ? "text-xl mt-2 font-bold transition hover:bg-green-700 border-2 text-green-800 hover:text-white border-green-700 pt-1 pb-2 w-full rounded-full justify-center"
-                        : "text-xl mt-2 font-bold bg-gray-700 border-2 text-white border-green-700 pt-1 pb-2 w-full rounded-full justify-center"
+                        ? "md:text-xl text-lg font-bold text-center text-green-600"
+                        : "md:text-xl text-lg font-bold text-center text-red-600"
                     }
                   >
-                    Request
-                  </button>
-                </form>
-              </div>
-            ))}
+                    {asset.quantity > 0 ? "Availble" : "Out Of Stock"}
+                  </p>
+
+                  <form
+                    onSubmit={(e) => handleRequest(e, asset)}
+                    className="w-full flex flex-col items-center gap-2 justify-between"
+                  >
+                    <textarea
+                      id="message"
+                      className="w-full min-h-10 placeholder:text-lg placeholder:font-medium text-lg font-medium border-2 rounded-md py-1 px-2"
+                      placeholder="Additional Message"
+                    ></textarea>
+                    <button
+                      disabled={!asset.quantity > 0}
+                      data-tooltip-id="my-tooltip"
+                      data-tooltip-content={`Request for ${asset.name}`}
+                      data-tooltip-place="bottom"
+                      className={
+                        asset.quantity > 0
+                          ? "text-xl mt-2 font-bold transition hover:bg-green-700 border-2 text-green-800 hover:text-white border-green-700 pt-1 pb-2 w-full rounded-full justify-center"
+                          : "text-xl mt-2 font-bold bg-gray-700 border-2 text-white border-green-700 pt-1 pb-2 w-full rounded-full justify-center"
+                      }
+                    >
+                      Request
+                    </button>
+                  </form>
+                </div>
+              ))}
           </div>
         )
       ) : (
