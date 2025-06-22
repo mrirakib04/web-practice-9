@@ -65,7 +65,7 @@ const LimitedStockItems = () => {
         <h2 className="lg:text-5xl sm:text-3xl text-2xl font-semibold">
           Limited Stock
         </h2>
-        <p className="sm:text-lg font-medium text-sky-600 mt-2 text-center">
+        <p className="sm:text-lg font-medium text-amber-600 mt-2 text-center">
           Check assets that are currently running low in stock.
         </p>
       </div>
@@ -78,6 +78,7 @@ const LimitedStockItems = () => {
         <div className="lg:w-11/12 w-full mx-auto px-5 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 items-center gap-5 md:mt-10 sm:mt-8 mt-6">
           {limited?.map((asset) => (
             <div
+              data-aos="zoom-out-up"
               key={asset._id}
               className="max-w-xs mx-auto w-full h-full p-4 border-2 flex flex-col justify-between gap-1 border-amber-100 bg-gradient-to-t from-amber-100 via-white to-white shadow-md transition-all hover:from-amber-200 hover:shadow-xl duration-300"
             >

@@ -63,7 +63,7 @@ const MyPendingRequests = () => {
     <div className="w-full flex flex-col items-center sm:mt-10 mt-5">
       <div className="w-full flex flex-col items-center">
         <h2 className="lg:text-4xl sm:text-3xl text-2xl font-semibold">
-          Pending Request
+          Pending Requests
         </h2>
         <p className="sm:text-lg font-medium text-violet-600 mt-2 text-center">
           View and manage your current pending asset requests.

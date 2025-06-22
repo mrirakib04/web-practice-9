@@ -4,11 +4,16 @@ import { UserMainContext } from "../../Context/UserContext";
 import useAxiosPrivate from "../../Hooks/useAxiosPrivate";
 import { FaSearchPlus, FaTrashAlt } from "react-icons/fa";
 import { toast } from "react-toastify";
-import { FaPenToSquare } from "react-icons/fa6";
+import {
+  FaPenToSquare,
+  FaRegCircleCheck,
+  FaRegPenToSquare,
+} from "react-icons/fa6";
 import Swal from "sweetalert2";
 import { DNA } from "react-loader-spinner";
 import { useNavigate } from "react-router";
 import { Helmet } from "react-helmet-async";
+import { AiOutlineCloseCircle } from "react-icons/ai";
 
 const HRAssetsList = () => {
   const { user } = useContext(UserMainContext);
@@ -211,51 +216,78 @@ const HRAssetsList = () => {
           <DNA></DNA>
         </div>
       ) : (
-        <div className="flex flex-col items-center max-w-6xl w-full mx-auto gap-5">
+        <div className="lg:w-11/12 w-full mx-auto px-5 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 items-center gap-5 md:mt-10 sm:mt-8 mt-6">
           {displayAssets?.map((asset) => (
             <div
+              data-aos="zoom-in-up"
               key={asset._id}
-              className="w-full md:p-5 p-3 border-2 border-indigo-600 rounded-lg flex lg:flex-row gap-5 flex-col items-center justify-between"
+              className="max-w-xs mx-auto w-full h-full p-4 border-2 flex flex-col justify-between gap-1 border-sky-100 bg-gradient-to-t from-sky-100 via-white to-white shadow-md transition-all hover:from-sky-200 hover:shadow-xl duration-300 rounded-b-xl"
             >
-              <div className="w-full flex items-center justify-between">
-                <h2 className="md:text-xl text-lg font-medium">
-                  <span className="font-bold">Name: </span>
-                  {asset.name}
-                </h2>
-                <p className="md:text-xl text-lg font-medium text-zinc-600">
-                  <span className="font-bold text-zinc-700">Quantity: </span>
-                  {asset.quantity}
-                </p>
-              </div>
-              <div className="w-full flex flex-wrap items-center gap-2 lg:justify-evenly justify-between">
-                <p className="md:text-lg text-base font-medium text-zinc-600">
-                  <span className="font-bold text-zinc-700">Type: </span>
-                  {asset.type}
-                </p>
-                <p className="md:text-lg text-base font-medium text-zinc-600">
-                  <span className="font-bold text-zinc-700">Added Date: </span>
+              <h2 className="md:text-3xl text-2xl font-semibold text-start">
+                {asset.name}
+              </h2>
+              <div className="w-full">
+                <div className="mt-6 flex justify-between items-start">
+                  <div className="flex flex-col w-full">
+                    <span className="text-sm font-medium text-gray-500">
+                      Quantity:
+                    </span>
+                    <p className="text-2xl font-medium text-white bg-sky-800 text-center mt-1 rounded-xl py-1 px-4 w-fit">
+                      {asset.quantity}
+                    </p>
+                  </div>
+                  <div className="flex flex-col items-center gap-1">
+                    <span className="text-sm font-medium text-gray-500">
+                      Returnable:
+                    </span>
+                    {asset.type === "returnable" ? (
+                      <FaRegCircleCheck
+                        data-tooltip-id="my-tooltip"
+                        data-tooltip-content={"Yes"}
+                        data-tooltip-place="left"
+                        className="text-3xl text-orange-500"
+                      ></FaRegCircleCheck>
+                    ) : (
+                      <AiOutlineCloseCircle
+                        data-tooltip-id="my-tooltip"
+                        data-tooltip-content={"No"}
+                        data-tooltip-place="left"
+                        className="text-3xl text-lime-500"
+                      ></AiOutlineCloseCircle>
+                    )}
+                  </div>
+                </div>
+                <p className="md:text-lg text-base font-medium text-black flex gap-1 mt-3 flex-wrap">
+                  <span className="font-semibold text-gray-500">
+                    Entry Date:
+                  </span>
                   {asset.date}
                 </p>
-              </div>
-              <div className="w-fit flex sm:flex-nowrap flex-wrap items-center gap-2 lg:justify-evenly justify-between">
-                <button
-                  onClick={() => assetEdit(asset._id)}
-                  data-tooltip-id="my-tooltip"
-                  data-tooltip-content={`Update ${asset.name} Details`}
-                  data-tooltip-place="bottom"
-                  className="text-2xl transition hover:bg-green-700 border-2 text-green-800 hover:text-white border-green-700 p-3 rounded-full"
-                >
-                  <FaPenToSquare></FaPenToSquare>
-                </button>
-                <button
-                  onClick={() => handleDeleteAsset(asset._id)}
-                  data-tooltip-id="my-tooltip"
-                  data-tooltip-content={`Delete ${asset.name}`}
-                  data-tooltip-place="bottom"
-                  className="text-2xl transition hover:bg-red-700 border-2 text-red-800 hover:text-white border-red-700 p-3 rounded-full"
-                >
-                  <FaTrashAlt></FaTrashAlt>
-                </button>
+
+                <div className="w-full flex flex-wrap items-center gap-2 justify-between mt-4">
+                  <button
+                    onClick={() => assetEdit(asset._id)}
+                    data-tooltip-id="my-tooltip"
+                    data-tooltip-content={`Update ${asset.name} Details`}
+                    data-tooltip-place="bottom"
+                    className="relative overflow-hidden group text-xl border-2 border-green-700 text-green-800 p-2 rounded-full transition-colors duration-300"
+                  >
+                    <span className="relative z-10 transition-colors duration-300 group-hover:text-white">
+                      <FaRegPenToSquare></FaRegPenToSquare>
+                    </span>
+                    <span className="absolute inset-0 bg-green-700 z-0 transition-transform duration-300 transform -translate-x-full group-hover:translate-x-0"></span>
+                  </button>
+
+                  <button
+                    onClick={() => handleDeleteAsset(asset._id)}
+                    data-tooltip-id="my-tooltip"
+                    data-tooltip-content={`Delete ${asset.name}`}
+                    data-tooltip-place="bottom"
+                    className="text-xl transition hover:bg-red-700 border-2 text-red-800 hover:text-white border-red-700 p-2 rounded-full"
+                  >
+                    <FaTrashAlt></FaTrashAlt>
+                  </button>
+                </div>
               </div>
             </div>
           ))}
