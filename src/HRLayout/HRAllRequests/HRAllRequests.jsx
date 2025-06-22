@@ -129,6 +129,7 @@ const HRAllRequests = () => {
 
   // handle reject
   const handleReject = async (request) => {
+    const approveDate = getCurrentDateTime();
     Swal.fire({
       title: "Are you sure?",
       text: `You want to reject the request for ${request.name}`,
@@ -139,15 +140,16 @@ const HRAllRequests = () => {
       confirmButtonText: "Yes, Reject It!",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const resDeletePending = await AxiosSecure.delete(
-          `/request/delete?query=${request.assetId}`
+        const resRejectPending = await AxiosSecure.patch(
+          `/request/reject?query=${request.assetId}`,
+          { approveDate }
         );
         const resDeleteRequest = await AxiosSecure.delete(
           `/pending/delete/${request._id}`
         );
 
         if (
-          resDeletePending.data.deletedCount > 0 &&
+          resRejectPending.data.modifiedCount > 0 &&
           resDeleteRequest.data.deletedCount > 0
         ) {
           await refetch();

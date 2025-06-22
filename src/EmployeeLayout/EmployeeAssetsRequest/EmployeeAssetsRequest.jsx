@@ -54,12 +54,10 @@ const EmployeeAssetsRequest = () => {
   console.log(employee.hiredBy, displayAssets);
 
   // time
-  let month = null;
-  let year = null;
   const getCurrentDateTime = () => {
     const now = new Date();
-    year = now.getFullYear();
-    month = now.getMonth();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
     const day = String(now.getDate()).padStart(2, "0");
     let hours = String(now.getHours()).padStart(2, "0");
     const minutes = String(now.getMinutes()).padStart(2, "0");
@@ -76,8 +74,6 @@ const EmployeeAssetsRequest = () => {
     const requestByEmail = user.email;
     const requestFor = asset.owner;
     const requestDate = getCurrentDateTime();
-    const requestMonth = month;
-    const requestYear = year;
     const additionalNote = e.target.message.value;
     const assetId = asset._id;
     const status = "pending";
@@ -90,8 +86,6 @@ const EmployeeAssetsRequest = () => {
       requestByEmail,
       requestFor,
       requestDate,
-      requestMonth,
-      requestYear,
       additionalNote,
       assetId,
       status,
