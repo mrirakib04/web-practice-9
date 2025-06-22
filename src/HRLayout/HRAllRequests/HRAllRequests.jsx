@@ -171,7 +171,7 @@ const HRAllRequests = () => {
         <h2 className="lg:text-4xl sm:text-3xl text-2xl font-semibold">
           All Requests
         </h2>
-        <p className="sm:text-lg font-medium text-purple-600 mt-2">
+        <p className="sm:text-lg font-medium text-purple-700 mt-2">
           View your employees asset requests.
         </p>
       </div>
@@ -197,56 +197,59 @@ const HRAllRequests = () => {
         <div className="mt-5 w-full mx-auto px-5 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4">
           {displayRequests?.map((request) => (
             <div
+              data-aos="fade-up"
               key={request._id}
-              className="max-w-[300px] p-2 border-2 shadow-lg shadow-purple-100 border-purple-800 rounded-xl w-full flex flex-col gap-1 mx-auto object-cover"
+              className="max-w-[300px] overflow-hidden border-2 shadow-lg shadow-gray-300 border-purple-700 rounded-3xl w-full flex flex-col gap-1 mx-auto object-cover rounded-tl-none"
             >
-              <h2 className="md:text-xl text-lg font-medium">
-                <span className="font-bold">Name: </span>
-                {request.name}
-              </h2>
-              <h2 className="md:text-xl text-lg font-medium">
-                <span className="font-bold">Type: </span>
-                {request.type}
-              </h2>
-              <Divider></Divider>
-              <div className="w-full flex flex-col h-full justify-between gap-1">
+              <div className="w-full h-full flex flex-col gap-1 bg-purple-700 p-2 text-white">
+                <h2 className="text-2xl font-bold">{request.name}</h2>
+                <h2 className="text-base font-medium">
+                  <span className="font-semibold text-gray-200">Type: </span>
+                  {request.type}
+                </h2>
+                {/* <Divider></Divider> */}
+              </div>
+              <div className="w-full flex flex-col h-full gap-1 p-2">
                 <p
                   data-tooltip-id="my-tooltip"
                   data-tooltip-content={request.requestByName}
                   data-tooltip-place="top"
-                  className="cursor-pointer md:text-lg text-base font-medium text-emerald-700 block truncate max-w-none"
+                  className="cursor-pointer md:text-lg text-base font-medium text-purple-700 block truncate max-w-none"
                 >
-                  <span className="font-bold text-zinc-700">RequestBy: </span>
+                  <span className="font-bold text-black">RequestBy: </span>
                   {request.requestByName}
                 </p>
                 <p
                   data-tooltip-id="my-tooltip"
                   data-tooltip-content={request.requestByEmail}
                   data-tooltip-place="bottom"
-                  className="cursor-pointer md:text-lg text-base font-medium text-zinc-600 block truncate max-w-none"
+                  className="cursor-pointer text-base font-medium text-zinc-600 block truncate max-w-none"
                 >
                   <span className="font-bold text-zinc-700">Email: </span>
                   {request.requestByEmail}
                 </p>
-                <p className="md:text-lg text-base font-medium text-zinc-600">
-                  <span className="font-bold text-zinc-700">Date: </span>
+                <p className="text-base font-medium text-gray-600">
+                  <span className="font-bold text-gray-700">Date: </span>
                   {request.requestDate}
                 </p>
-                <p className="md:text-lg text-base font-medium text-zinc-600">
-                  <span className="font-bold text-zinc-700">Note: </span>
+                <p className="text-base font-medium text-gray-600">
+                  <span className="font-bold text-gray-700">Note: </span>
                   {request.additionalNote || "none"}
                 </p>
-                <p className="md:text-lg text-base font-medium text-zinc-600">
-                  <span className="font-bold text-zinc-700">Status: </span>
+                <p className="text-base font-medium text-zinc-600">
+                  <span className="font-bold text-gray-700">Status: </span>
                   {request.status}
                 </p>
               </div>
-              <div className="w-full flex items-center justify-between gap-2">
+              <div className="w-full flex items-center justify-between gap-2 p-2">
                 <button
                   onClick={() => handleApprove(request)}
-                  className="text-base mt-2 font-bold transition hover:bg-green-700 border-2 text-green-800 hover:text-white border-green-700 py-1 w-full rounded-full"
+                  className="relative overflow-hidden group text-base mt-2 font-bold border-2 border-green-700 text-green-800 py-1 w-full rounded-full transition-colors duration-300"
                 >
-                  Approve
+                  <span className="relative z-10 transition-colors duration-300 group-hover:text-white">
+                    Approve
+                  </span>
+                  <span className="absolute inset-0 bg-green-700 z-0 transition-transform duration-300 transform -translate-x-full group-hover:translate-x-0"></span>
                 </button>
                 <button
                   onClick={() => handleReject(request)}
