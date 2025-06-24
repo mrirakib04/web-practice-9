@@ -5,10 +5,23 @@ import useAxiosPrivate from "../../Hooks/useAxiosPrivate";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import { Helmet } from "react-helmet-async";
+import { useQuery } from "@tanstack/react-query";
 
 const HRAddAsset = () => {
   const { user } = useContext(UserMainContext);
   const AxiosSecure = useAxiosPrivate();
+
+  // dynamic navbar control
+  const { data: hr = {} } = useQuery({
+    queryKey: ["userForNav"],
+    enabled: !!user?.email,
+    queryFn: async () => {
+      const res = await AxiosSecure.get(`/user/${user?.email}`);
+      return res.data;
+    },
+    retry: 3,
+    retryDelay: 2000,
+  });
 
   const getCurrentDateTime = () => {
     const now = new Date();
@@ -31,10 +44,10 @@ const HRAddAsset = () => {
     const type = target.type.value;
     const date = getCurrentDateTime();
     const owner = user.email;
-
-    console.log(name, quantity, type, date, owner);
+    const companyName = hr.companyName;
+    console.log(name, quantity, type, date, owner, companyName);
     if (quantity > 0) {
-      const asset = { name, quantity, type, date, owner };
+      const asset = { name, quantity, type, date, owner, companyName };
       const postRes = await AxiosSecure.post("/assets", asset);
 
       console.log(postRes.status);

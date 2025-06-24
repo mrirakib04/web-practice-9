@@ -18,6 +18,32 @@ import {
 import PropTypes from "prop-types";
 import { Helmet } from "react-helmet-async";
 
+// handle print
+
+const AssetPDF = ({ asset }) => (
+  <Document>
+    <Page style={styles.page}>
+      <View style={styles.header}>
+        <Text>Company Name: {asset.companyName}</Text>
+      </View>
+      <View style={styles.section}>
+        <Text>Asset Name: {asset.name}</Text>
+        <Text>Type: {asset.type}</Text>
+        <Text>Status: {asset.status}</Text>
+        <Text>Requested Date: {asset.requestDate}</Text>
+        <Text>Approved Date: {asset.approveDate || "None"}</Text>
+      </View>
+      <View style={styles.footer}>
+        <Text>Print Date: {new Date().toLocaleDateString()}</Text>
+        <Text>SAAS Provider: HR3 Managements</Text>
+      </View>
+    </Page>
+  </Document>
+);
+AssetPDF.propTypes = {
+  asset: PropTypes.object?.isRequired,
+};
+
 const EmployeeAssets = () => {
   const { user } = useContext(UserMainContext);
   const AxiosSecure = useAxiosPrivate();
@@ -38,7 +64,7 @@ const EmployeeAssets = () => {
 
   useEffect(() => {
     refetch();
-  }, [user?.email]);
+  }, [user?.email, refetch]);
 
   let displayAssetRequest =
     (storedAssetRequests.length > 0 ? storedAssetRequests : assetRequests) ||
@@ -92,31 +118,6 @@ const EmployeeAssets = () => {
       (assets) => assets.status === "pending"
     );
     setStoredAssetRequests(nonReturnableAssets);
-  };
-
-  // handle print
-
-  const AssetPDF = ({ asset }) => (
-    <Document>
-      <Page style={styles.page}>
-        <View style={styles.header}>
-          <Text>Company Name: HR3 Managements</Text>
-        </View>
-        <View style={styles.section}>
-          <Text>Asset Name: {asset.name}</Text>
-          <Text>Type: {asset.type}</Text>
-          <Text>Status: {asset.status}</Text>
-          <Text>Requested Date: {asset.requestDate}</Text>
-          <Text>Approved Date: {asset.approveDate || "None"}</Text>
-        </View>
-        <View style={styles.footer}>
-          <Text>Print Date: {new Date().toLocaleDateString()}</Text>
-        </View>
-      </Page>
-    </Document>
-  );
-  AssetPDF.propTypes = {
-    asset: PropTypes.object?.isRequired,
   };
 
   // request delete
@@ -199,7 +200,7 @@ const EmployeeAssets = () => {
               text: `${asset.name} Returned.`,
               icon: "success",
             });
-            await refetch();
+            refetch();
             setStoredAssetRequests(assetRequests);
             displayAssetRequest = assetRequests;
           }

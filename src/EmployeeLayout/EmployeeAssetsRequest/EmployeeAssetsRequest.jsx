@@ -36,17 +36,29 @@ const EmployeeAssetsRequest = () => {
     enabled: !!employee?.hiredBy,
   });
 
+  // useEffect(() => {
+  //   if (employee?.hiredBy) {
+  //     refetchAvailableAssets();
+  //   }
+  // }, [employee?.hiredBy, refetchAvailableAssets]);
+
   useEffect(() => {
     refetchAvailableAssets();
-    if (storedAssets.length == 0) {
+    if (storedAssets?.length == 0 && availableAssets.length > 0) {
       setStoredAssets(availableAssets);
     }
   }, [
     employee?.hiredBy,
     refetchAvailableAssets,
     availableAssets,
-    storedAssets.length,
+    storedAssets?.length,
   ]);
+
+  // useEffect(() => {
+  //   if (availableAssets.length > 0 && storedAssets.length === 0) {
+  //     setStoredAssets(availableAssets);
+  //   }
+  // }, [availableAssets, storedAssets]);
 
   let displayAssets =
     (storedAssets.length > 0 ? storedAssets : availableAssets) || [];
@@ -78,6 +90,7 @@ const EmployeeAssetsRequest = () => {
     const assetId = asset._id;
     const status = "pending";
     const approveDate = "";
+    const companyName = asset.companyName;
 
     const reqDoc = {
       name,
@@ -90,6 +103,7 @@ const EmployeeAssetsRequest = () => {
       assetId,
       status,
       approveDate,
+      companyName,
     };
     const postResRequests = await AxiosSecure.post("/requests", reqDoc);
     const postResPending = await AxiosSecure.post("/pending", reqDoc);
