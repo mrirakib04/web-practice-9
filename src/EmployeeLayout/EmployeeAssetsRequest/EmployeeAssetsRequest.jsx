@@ -249,54 +249,60 @@ const EmployeeAssetsRequest = () => {
             <DNA></DNA>
           </div>
         ) : (
-          <div className="w-full mx-auto px-5 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 items-center  gap-5 mt-5">
+          <div className="w-full mx-auto px-5 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 items-center  md:gap-10 gap-5 mt-5">
             {displayAssets &&
               displayAssets?.map((asset) => (
                 <div
                   key={asset._id}
-                  className="h-full max-w-xs mx-auto w-full p-2 border-2 flex flex-col gap-1 rounded-md border-orange-600 justify-between"
+                  className="h-full max-w-xs mx-auto w-full border-2 flex flex-col gap-1 rounded-3xl border-cyan-700 rounded-tl-none rounded-br-none overflow-hidden"
                 >
-                  <h2 className="md:text-xl text-lg font-medium">
-                    <span className="font-bold">Name: </span>
-                    {asset.name}
-                  </h2>
-                  <p className="md:text-lg text-base font-medium text-zinc-600">
-                    <span className="font-bold text-zinc-700">Type: </span>
-                    {asset.type}
-                  </p>
-                  <p
-                    className={
-                      asset.quantity > 0
-                        ? "md:text-xl text-lg font-bold text-center text-green-600"
-                        : "md:text-xl text-lg font-bold text-center text-red-600"
-                    }
-                  >
-                    {asset.quantity > 0 ? "Availble" : "Out Of Stock"}
-                  </p>
-
-                  <form
-                    onSubmit={(e) => handleRequest(e, asset)}
-                    className="w-full flex flex-col items-center gap-2 justify-between"
-                  >
-                    <textarea
-                      id="message"
-                      className="w-full min-h-10 placeholder:text-lg placeholder:font-medium text-lg font-medium border-2 rounded-md py-1 px-2"
-                      placeholder="Additional Message"
-                    ></textarea>
-                    <button
-                      disabled={!asset.quantity > 0}
-                      data-tooltip-id="my-tooltip"
-                      data-tooltip-content={`Request for ${asset.name}`}
-                      data-tooltip-place="bottom"
+                  <div className="w-full bg-cyan-700 p-2">
+                    <h2 className="text-2xl font-semibold text-white">
+                      {asset.name}
+                    </h2>
+                  </div>
+                  <div className="w-full p-2">
+                    <p className="text-base font-medium text-gray-600">
+                      <span className="font-bold text-gray-700">Type: </span>
+                      {asset.type}
+                    </p>
+                    <p
                       className={
                         asset.quantity > 0
-                          ? "text-xl mt-2 font-bold transition hover:bg-green-700 border-2 text-green-800 hover:text-white border-green-700 pt-1 pb-2 w-full rounded-full justify-center"
-                          : "text-xl mt-2 font-bold bg-gray-700 border-2 text-white border-green-700 pt-1 pb-2 w-full rounded-full justify-center"
+                          ? "md:text-xl text-lg font-bold text-center text-green-600"
+                          : "md:text-xl text-lg font-bold text-center text-red-600"
                       }
                     >
-                      Request
-                    </button>
-                  </form>
+                      {asset.quantity > 0 ? "Availble" : "Out Of Stock"}
+                    </p>
+                    <form
+                      onSubmit={(e) => handleRequest(e, asset)}
+                      className="w-full flex flex-col items-center gap-2 justify-between mt-2"
+                    >
+                      <textarea
+                        id="message"
+                        className="w-full min-h-10 placeholder:text-lg placeholder:font-medium text-lg font-medium border-2 rounded-md py-1 px-2"
+                        placeholder="Additional Message"
+                      ></textarea>
+                      <button
+                        disabled={!asset.quantity > 0}
+                        data-tooltip-id="my-tooltip"
+                        data-tooltip-content={
+                          asset.quantity > 0
+                            ? `Request for ${asset.name}`
+                            : "Out of stock"
+                        }
+                        data-tooltip-place="bottom"
+                        className={
+                          asset.quantity > 0
+                            ? "text-xl mt-2 font-bold transition hover:bg-green-700 border-2 text-green-800 hover:text-white border-green-700 pt-1 pb-2 w-full rounded-full justify-center"
+                            : "text-xl mt-2 font-bold bg-gray-600 border-2 text-white border-gray-600 pt-1 pb-2 w-full rounded-full justify-center"
+                        }
+                      >
+                        Request
+                      </button>
+                    </form>
+                  </div>
                 </div>
               ))}
           </div>

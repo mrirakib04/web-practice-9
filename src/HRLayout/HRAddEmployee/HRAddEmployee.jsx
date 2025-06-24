@@ -23,9 +23,10 @@ const HRAddEmployee = () => {
   const { data: company = [] } = useQuery({
     queryKey: ["company"],
     queryFn: async () => {
-      const res = await AxiosSecure.get(`/hr/${user.email}`);
+      const res = await AxiosSecure.get(`/hr/${user?.email}`);
       return res.data;
     },
+    enabled: !!user?.email,
   });
 
   console.log(company);
@@ -42,34 +43,39 @@ const HRAddEmployee = () => {
   const { data: hr = [], refetch: rerefetchHR } = useQuery({
     queryKey: ["hr"],
     queryFn: async () => {
-      const res = await AxiosSecure.get(`/hr/${user.email}`);
+      const res = await AxiosSecure.get(`/hr/${user?.email}`);
       return res.data;
     },
+    enabled: !!user?.email,
   });
 
-  const { data: team = [] } = useQuery({
+  const { data: team = [], refetch: refetchTeam } = useQuery({
     queryKey: ["team"],
     queryFn: async () => {
-      const res = await AxiosSecure.get(`/team/${user.email}`);
+      const res = await AxiosSecure.get(`/team/${user?.email}`);
       return res.data;
     },
+    enabled: !!user?.email,
   });
 
   console.log("----------", team.length, hr.packageName, "---------");
 
   const assignUser = async (employee) => {
+    const { _id, ...cleanEmployee } = employee;
     const addInTeam = {
-      ...employee,
+      ...cleanEmployee,
       hiredBy: user.email,
       companyLogo: company.companyLogo,
       companyName: company.companyName,
     };
+
     await AxiosSecure.post("/team", addInTeam);
     // Add the user to the "assigned" collection
-    await AxiosSecure.post("/assigned", employee);
+    await AxiosSecure.post("/assigned", cleanEmployee);
     // Remove the user from the "unemployed" collection
     await AxiosSecure.delete(`/unemployed/${employee.email}`);
     refetch();
+    refetchTeam();
   };
 
   const columns = [
@@ -112,7 +118,7 @@ const HRAddEmployee = () => {
         <img
           src={info.getValue()}
           alt={info.row.original.name}
-          className="w-10 h-10 rounded-full"
+          className="w-10 h-10 rounded-full object-cover"
         />
       ),
     },
@@ -123,14 +129,14 @@ const HRAddEmployee = () => {
         <button
           data-tooltip-id="my-tooltip"
           data-tooltip-content={
-            hr.packageName === team.length
+            hr.packageName <= parseInt(team.length)
               ? "Increase your limit"
               : "Add employee"
           }
-          disabled={hr.packageName === team.length}
+          disabled={hr.packageName <= parseInt(team.length)}
           onClick={() => assignUser(info.row.original)}
           className={
-            hr.packageName === team.length
+            hr.packageName <= parseInt(team.length)
               ? "text-3xl text-gray-400 transition hover:text-gray-700"
               : "text-3xl text-green-400 transition hover:text-green-700"
           }

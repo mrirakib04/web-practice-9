@@ -20,8 +20,15 @@ const HREmployeeList = () => {
   });
 
   const handleRemove = async (member) => {
-    const { hiredBy, ...withoutHREmail } = member;
-    console.log(member, hiredBy, withoutHREmail);
+    const { _id, hiredBy, companyName, companyLogo, ...withoutCompanyDetails } =
+      member;
+    console.log(
+      member,
+      hiredBy,
+      companyName,
+      companyLogo,
+      withoutCompanyDetails
+    );
     Swal.fire({
       title: "Are you sure?",
       icon: "warning",
@@ -31,7 +38,7 @@ const HREmployeeList = () => {
       confirmButtonText: "Yes, remove him!",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        await AxiosSecure.post("/unemployed", withoutHREmail);
+        await AxiosSecure.post("/unemployed", withoutCompanyDetails);
         await AxiosSecure.delete(`/assigned/${member.email}`);
         await AxiosSecure.delete(`/team/${member.email}`);
         refetch();
