@@ -108,16 +108,16 @@ const EmployeeAssets = () => {
     setStoredAssetRequests(nonReturnableAssets);
   };
   const Approved = () => {
-    const nonReturnableAssets = assetRequests.filter(
+    const approvedAssets = assetRequests.filter(
       (assets) => assets.status === "approved"
     );
-    setStoredAssetRequests(nonReturnableAssets);
+    setStoredAssetRequests(approvedAssets);
   };
   const Pending = () => {
-    const nonReturnableAssets = assetRequests.filter(
+    const pendingAssets = assetRequests.filter(
       (assets) => assets.status === "pending"
     );
-    setStoredAssetRequests(nonReturnableAssets);
+    setStoredAssetRequests(pendingAssets);
   };
 
   // request delete
@@ -222,7 +222,7 @@ const EmployeeAssets = () => {
           View your all assets requests.
         </p>
       </div>
-      <div className="flex flex-row sm:flex-nowrap px-2 flex-wrap-reverse items-center justify-between gap-2 container mx-auto">
+      <div className="flex flex-row sm:flex-nowrap px-2 flex-wrap-reverse items-center justify-between gap-2 container mx-auto mt-5">
         <div>
           <div
             className="relative"
@@ -287,50 +287,43 @@ const EmployeeAssets = () => {
           <DNA></DNA>
         </div>
       ) : displayAssetRequest.length > 0 ? (
-        <div className="mt-5 grid md:grid-cols-2 grid-cols-1 items-center gap-5 container px-2 mx-auto w-full">
+        <div className="mt-5 grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 items-center gap-5 container px-2 mx-auto w-full">
           {displayAssetRequest?.map((request) => (
             <div
               key={request._id}
-              className="w-full h-full flex flex-col items-center justify-between p-3 gap-2 border-2 rounded-lg border-violet-800 shadow-lg shadow-violet-100"
+              className="w-full h-full flex flex-col sm:max-w-none max-w-sm mx-auto items-start justify-between p-3 gap-2 border-2 rounded-lg border-violet-800 shadow-lg shadow-violet-100"
             >
-              <div className="flex flex-col gap-2 w-full h-full justify-between">
-                <div className="w-full h-full flex items-center gap-2 flex-wrap justify-between">
-                  <h2 className="md:text-xl text-lg font-medium">
-                    <span className="font-bold">Name: </span>
-                    {request.name}
-                  </h2>
-                  <p className="md:text-lg text-base font-medium text-zinc-600">
-                    <span className="font-bold text-zinc-700">Type: </span>
-                    {request.type}
-                  </p>
-                  <p className="md:text-lg text-base font-medium text-zinc-600">
-                    <span className="font-bold text-zinc-700">Status: </span>
-                    <span
-                      className={
-                        request.status === "pending"
-                          ? "text-orange-600 font-medium"
-                          : "text-green-600 font-medium"
-                      }
-                    >
-                      {request.status}
-                    </span>
-                  </p>
-                </div>
-                <div className="w-full h-full flex items-center gap-2 flex-wrap justify-between">
-                  <p className="md:text-lg text-base font-medium text-zinc-600">
-                    <span className="font-bold text-zinc-700">
-                      Requested Date:{" "}
-                    </span>
-                    {request.requestDate}
-                  </p>
-                  <p className="md:text-lg text-base font-medium text-zinc-600">
-                    <span className="font-bold text-zinc-700">
-                      Approved Date:{" "}
-                    </span>
-                    {request.approveDate || "none"}
-                  </p>
-                </div>
+              <div className="w-full">
+                <h2 className="text-2xl font-semibold">{request.name}</h2>
               </div>
+              <p className="flex gap-1 text-base font-medium text-zinc-600">
+                <span className="font-bold text-zinc-700">Type:</span>
+                {request.type}
+              </p>
+              <p className="flex gap-1 text-base font-medium text-zinc-600">
+                <span className="font-bold text-zinc-700">Status:</span>
+                <span
+                  className={
+                    (request.status === "rejected" &&
+                      "text-red-600 font-bold") ||
+                    (request.status === "pending" &&
+                      "text-orange-600 font-bold") ||
+                    "text-green-600 font-bold"
+                  }
+                >
+                  {request.status}
+                </span>
+              </p>
+
+              <p className="flex gap-1 flex-wrap text-base font-medium text-zinc-600">
+                <span className="font-bold text-zinc-700">Requested Date:</span>
+                {request.requestDate}
+              </p>
+              <p className="flex gap-1 flex-wrap text-base font-medium text-zinc-600">
+                <span className="font-bold text-zinc-700">Approved Date:</span>
+                {request.approveDate || "none"}
+              </p>
+
               <div className="flex items-center gap-3 w-full justify-between">
                 {request.status === "approved" &&
                   request.type === "returnable" && (
