@@ -17,9 +17,10 @@ const MyPendingRequests = () => {
   } = useQuery({
     queryKey: ["PendingRequests"],
     queryFn: async () => {
-      const res = await AxiosSecure.get(`/pending/${user.email}`);
+      const res = await AxiosSecure.get(`/pending/${user?.email}`);
       return res.data;
     },
+    enabled: !!user?.email,
   });
 
   const handleDelete = (id) => {

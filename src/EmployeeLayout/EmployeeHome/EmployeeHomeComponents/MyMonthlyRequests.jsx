@@ -57,7 +57,7 @@ const MyMonthlyRequests = () => {
                 </p>
                 <p className="text-base font-medium text-gray-600 flex gap-1">
                   <span className="font-semibold text-gray-700">
-                    {(request.status === "rejected" && "Rejected") ||
+                    {(request.status === "rejected" && "Rejected:") ||
                       "Approved:"}
                   </span>
                   {request.approveDate || "none"}

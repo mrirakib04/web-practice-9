@@ -3,7 +3,7 @@ import { UserMainContext } from "../../Context/UserContext";
 import PendingRequests from "./HRHomeSubComponents/PendingRequests";
 import TopRequestedItems from "./HRHomeSubComponents/TopRequestedItems";
 import LimitedStockItems from "./HRHomeSubComponents/LimitedStockItems";
-import PieChart from "./HRHomeSubComponents/PieChart";
+import RequestsPieChart from "./HRHomeSubComponents/RequestsPieChart";
 import ExtraSectionA from "./HRHomeSubComponents/ExtraSectionA";
 import ExtraSectionB from "./HRHomeSubComponents/ExtraSectionB";
 import { Helmet } from "react-helmet-async";
@@ -26,7 +26,7 @@ const HRHome = () => {
       <PendingRequests></PendingRequests>
       <TopRequestedItems></TopRequestedItems>
       <LimitedStockItems></LimitedStockItems>
-      <PieChart></PieChart>
+      <RequestsPieChart></RequestsPieChart>
       <ExtraSectionA></ExtraSectionA>
       <ExtraSectionB></ExtraSectionB>
     </div>

@@ -32,6 +32,7 @@ const AssetPDF = ({ asset }) => (
         <Text>Status: {asset.status}</Text>
         <Text>Requested Date: {asset.requestDate}</Text>
         <Text>Approved Date: {asset.approveDate || "None"}</Text>
+        <Text>Approved By: {asset.requestFor || "None"}</Text>
       </View>
       <View style={styles.footer}>
         <Text>Print Date: {new Date().toLocaleDateString()}</Text>
@@ -57,14 +58,18 @@ const EmployeeAssets = () => {
   } = useQuery({
     queryKey: ["assetRequests"],
     queryFn: async () => {
-      const res = await AxiosSecure.get(`/asset/requests/${user.email}`);
+      const res = await AxiosSecure.get(`/asset/requests/${user?.email}`);
       return res.data;
     },
+    enabled: !!user?.email,
   });
-
+  console.log("assets req list:", assetRequests);
   useEffect(() => {
     refetch();
-  }, [user?.email, refetch]);
+    if (storedAssetRequests?.length == 0 && assetRequests?.length > 0) {
+      setStoredAssetRequests(assetRequests);
+    }
+  }, [user?.email, storedAssetRequests, assetRequests, refetch]);
 
   let displayAssetRequest =
     (storedAssetRequests.length > 0 ? storedAssetRequests : assetRequests) ||
@@ -150,9 +155,9 @@ const EmployeeAssets = () => {
             icon: "success",
             confirmButtonColor: "#038a07",
           });
-          await refetch();
-          setStoredAssetRequests(assetRequests);
-          displayAssetRequest = assetRequests;
+          const updatedData = await refetch();
+          setStoredAssetRequests(updatedData.data);
+          console.log("after del", displayAssetRequest);
         }
       }
     });
@@ -200,9 +205,8 @@ const EmployeeAssets = () => {
               text: `${asset.name} Returned.`,
               icon: "success",
             });
-            refetch();
-            setStoredAssetRequests(assetRequests);
-            displayAssetRequest = assetRequests;
+            const updatedData = await refetch();
+            setStoredAssetRequests(updatedData.data);
           }
         }
       });
@@ -288,85 +292,100 @@ const EmployeeAssets = () => {
         </div>
       ) : displayAssetRequest.length > 0 ? (
         <div className="mt-5 grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 items-center gap-5 container px-2 mx-auto w-full">
-          {displayAssetRequest?.map((request) => (
-            <div
-              key={request._id}
-              className="w-full h-full flex flex-col sm:max-w-none max-w-sm mx-auto items-start justify-between p-3 gap-2 border-2 rounded-lg border-violet-800 shadow-lg shadow-violet-100"
-            >
-              <div className="w-full">
-                <h2 className="text-2xl font-semibold">{request.name}</h2>
-              </div>
-              <p className="flex gap-1 text-base font-medium text-zinc-600">
-                <span className="font-bold text-zinc-700">Type:</span>
-                {request.type}
-              </p>
-              <p className="flex gap-1 text-base font-medium text-zinc-600">
-                <span className="font-bold text-zinc-700">Status:</span>
-                <span
-                  className={
-                    (request.status === "rejected" &&
-                      "text-red-600 font-bold") ||
-                    (request.status === "pending" &&
-                      "text-orange-600 font-bold") ||
-                    "text-green-600 font-bold"
-                  }
-                >
-                  {request.status}
-                </span>
-              </p>
+          {displayAssetRequest &&
+            displayAssetRequest?.map((request) => (
+              <div
+                key={request._id}
+                className="w-full h-full flex flex-col sm:max-w-none max-w-sm mx-auto items-start justify-between p-3 gap-2 border-2 rounded-lg border-violet-800 shadow-lg shadow-violet-100"
+              >
+                <div className="w-full">
+                  <h2 className="text-2xl font-semibold">{request.name}</h2>
+                </div>
+                <p className="flex gap-1 text-base font-medium text-zinc-600">
+                  <span className="font-bold text-zinc-700">Type:</span>
+                  {request.type}
+                </p>
+                <p className="flex gap-1 text-base font-medium text-zinc-600">
+                  <span className="font-bold text-zinc-700">Status:</span>
+                  <span
+                    className={
+                      (request.status === "rejected" &&
+                        "text-red-600 font-bold") ||
+                      (request.status === "pending" &&
+                        "text-orange-600 font-bold") ||
+                      "text-green-600 font-bold"
+                    }
+                  >
+                    {request.status}
+                  </span>
+                </p>
 
-              <p className="flex gap-1 flex-wrap text-base font-medium text-zinc-600">
-                <span className="font-bold text-zinc-700">Requested Date:</span>
-                {request.requestDate}
-              </p>
-              <p className="flex gap-1 flex-wrap text-base font-medium text-zinc-600">
-                <span className="font-bold text-zinc-700">Approved Date:</span>
-                {request.approveDate || "none"}
-              </p>
+                <p className="flex gap-1 flex-wrap text-base font-medium text-zinc-600">
+                  <span className="font-bold text-zinc-700">
+                    Requested Date:
+                  </span>
+                  {request.requestDate}
+                </p>
+                <p className="flex gap-1 flex-wrap text-base font-medium text-zinc-600">
+                  <span className="font-bold text-zinc-700">
+                    {(request.status === "approved" && "Approved Date:") ||
+                      (request.status === "pending" && "Approved Date:") ||
+                      "Rejected Date:"}
+                  </span>
+                  {request.approveDate || "none"}
+                </p>
+                <p className="flex gap-1 flex-wrap text-base font-medium text-zinc-600">
+                  <span className="font-bold text-zinc-700">
+                    {(request.status === "approved" && "Approved By:") ||
+                      (request.status === "pending" && "Approved By:") ||
+                      "Rejected By:"}
+                  </span>
+                  {request.requestFor || "none"}
+                </p>
 
-              <div className="flex items-center gap-3 w-full justify-between">
-                {request.status === "approved" &&
-                  request.type === "returnable" && (
-                    <button
-                      onClick={() => handleReturn(request)}
-                      data-tooltip-id="my-tooltip"
-                      data-tooltip-content={`Return the ${request.name}`}
-                      data-tooltip-place="bottom"
-                      className="text-xl mt-2 font-bold transition hover:bg-emerald-700 border-2 text-emerald-800 hover:text-white border-emerald-700 pt-1 pb-2 w-full rounded-full justify-center"
+                <div className="flex items-center gap-3 w-full justify-between">
+                  {request.status === "approved" &&
+                    request.type === "returnable" && (
+                      <button
+                        onClick={() => handleReturn(request)}
+                        data-tooltip-id="my-tooltip"
+                        data-tooltip-content={`Return the ${request.name}`}
+                        data-tooltip-place="bottom"
+                        className="text-xl mt-2 font-bold transition hover:bg-emerald-700 border-2 text-emerald-800 hover:text-white border-emerald-700 pt-1 pb-2 w-full rounded-full justify-center"
+                      >
+                        Return
+                      </button>
+                    )}
+                  {request.status === "approved" && (
+                    <PDFDownloadLink
+                      className="w-full"
+                      document={<AssetPDF asset={request} />}
+                      fileName={`${request.name}-details.pdf`}
                     >
-                      Return
+                      <button
+                        data-tooltip-id="my-tooltip"
+                        data-tooltip-content={`Print the approved request of ${request.name}`}
+                        data-tooltip-place="bottom"
+                        className="text-xl mt-2 font-bold transition hover:bg-blue-700 border-2 text-blue-800 hover:text-white border-blue-700 pt-1 pb-2 w-full rounded-full justify-center"
+                      >
+                        Print
+                      </button>
+                    </PDFDownloadLink>
+                  )}
+                  {request.status === "pending" && (
+                    <button
+                      onClick={() => handleDelete(request.assetId)}
+                      data-tooltip-id="my-tooltip"
+                      data-tooltip-content={`Cancel request of ${request.name}`}
+                      data-tooltip-place="bottom"
+                      className="text-xl mt-2 font-bold transition hover:bg-red-700 border-2 text-red-800 hover:text-white border-red-700 pt-1 pb-2 w-full rounded-full justify-center"
+                    >
+                      Cancel
                     </button>
                   )}
-                {request.status === "approved" && (
-                  <PDFDownloadLink
-                    className="w-full"
-                    document={<AssetPDF asset={request} />}
-                    fileName={`${request.name}-details.pdf`}
-                  >
-                    <button
-                      data-tooltip-id="my-tooltip"
-                      data-tooltip-content={`Print the approved request of ${request.name}`}
-                      data-tooltip-place="bottom"
-                      className="text-xl mt-2 font-bold transition hover:bg-blue-700 border-2 text-blue-800 hover:text-white border-blue-700 pt-1 pb-2 w-full rounded-full justify-center"
-                    >
-                      Print
-                    </button>
-                  </PDFDownloadLink>
-                )}
-                {request.status === "pending" && (
-                  <button
-                    onClick={() => handleDelete(request.assetId)}
-                    data-tooltip-id="my-tooltip"
-                    data-tooltip-content={`Cancel request of ${request.name}`}
-                    data-tooltip-place="bottom"
-                    className="text-xl mt-2 font-bold transition hover:bg-red-700 border-2 text-red-800 hover:text-white border-red-700 pt-1 pb-2 w-full rounded-full justify-center"
-                  >
-                    Cancel
-                  </button>
-                )}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
         </div>
       ) : (
         <p className="mt-5 text-lg font-medium text-red-800 flex gap-1 items-center">
@@ -386,7 +405,13 @@ const styles = StyleSheet.create({
     textAlign: "center",
     lineHeight: 2,
   },
-  section: { fontSize: 14, marginBottom: 20, textAlign: "center", padding: 10 },
+  section: {
+    fontSize: 14,
+    marginBottom: 20,
+    textAlign: "start",
+    padding: 10,
+    margin: "0 auto 0 auto",
+  },
   footer: { fontSize: 12, marginTop: 10, textAlign: "center" },
 });
 
