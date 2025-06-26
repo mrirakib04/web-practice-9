@@ -75,8 +75,8 @@ const RequestsPieChart = () => {
           <DNA></DNA>
         </div>
       ) : chartData ? (
-        <div className="w-full p-5 mx-auto">
-          <ResponsiveContainer width="100%" height={250}>
+        <div className="w-full px-5 mx-auto">
+          <ResponsiveContainer width="100%" height={350}>
             <PieChart width={400} height={400}>
               <Pie
                 data={transformedData}
@@ -84,7 +84,7 @@ const RequestsPieChart = () => {
                 cy="50%"
                 labelLine={false}
                 label={renderCustomizedLabel}
-                outerRadius={80}
+                outerRadius={120}
                 fill="#8884d8"
                 dataKey="value"
               >

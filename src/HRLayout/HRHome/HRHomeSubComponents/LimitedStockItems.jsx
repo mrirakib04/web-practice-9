@@ -91,7 +91,7 @@ const LimitedStockItems = () => {
                     <span className="text-sm font-medium text-gray-500">
                       Quantity:
                     </span>
-                    <p className="text-2xl font-medium text-white bg-sky-800 text-center mt-1 rounded-xl py-1 px-4 w-fit">
+                    <p className="text-lg font-medium text-white bg-sky-800 text-center mt-1 rounded-xl py-1 px-4 w-fit">
                       {asset.quantity}
                     </p>
                   </div>
