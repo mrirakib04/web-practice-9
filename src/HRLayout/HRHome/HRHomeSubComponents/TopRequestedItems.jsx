@@ -39,10 +39,10 @@ const TopRequestedItems = () => {
         </div>
       ) : topRequestedAssets ? (
         <div className="lg:w-11/12 mt-5 w-full mx-auto px-5 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-5">
-          {topRequestedAssets?.map((request) => (
+          {topRequestedAssets?.map((request, idx) => (
             <div
               data-aos="fade-up"
-              key={request._id}
+              key={idx}
               className="max-w-[300px] overflow-hidden border-2 shadow-lg shadow-gray-300 border-purple-300 rounded-tr-xl w-full flex flex-col gap-1 mx-auto object-cover p-3 bg-gradient-to-bl from-purple-300 via-white to-white"
             >
               <div className="w-full h-full flex flex-col gap-1 text-black">

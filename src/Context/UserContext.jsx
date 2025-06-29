@@ -43,7 +43,10 @@ const UserContext = ({ children }) => {
   // Handle Logout
   const handleLogout = () => {
     setLoading(true);
-    return signOut(auth)
+    return AxiosPublic.post("/logout")
+      .then(() => {
+        signOut(auth);
+      })
       .then(() => {
         toast.warn(`Logout Successful`, {
           position: "top-center",
@@ -72,14 +75,11 @@ const UserContext = ({ children }) => {
         setName(currentUser.displayName);
         setImage(currentUser.photoURL);
         setPhone(currentUser.phoneNumber);
-        // get token and store client
+        // get token and store it via httpOnly cookie
         const userInfo = { email: currentUser.email };
-        AxiosPublic.post("/jwt", userInfo).then((res) => {
-          if (res.data.token) {
-            localStorage.setItem("jwt", res.data.token);
-            setLoading(false);
-          }
-        });
+        AxiosPublic.post("/jwt", userInfo).catch((err) =>
+          console.error("JWT token fetch failed:", err)
+        );
       } else {
         setUser(null);
         setName("");
@@ -91,7 +91,7 @@ const UserContext = ({ children }) => {
     return () => {
       unsubscribe();
     };
-  }, []);
+  }, [AxiosPublic]);
 
   //  compressed names
   const contextNames = {

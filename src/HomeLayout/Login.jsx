@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { UserMainContext } from "../Context/UserContext";
 import { toast } from "react-toastify";
 import useAxiosPublic from "../Hooks/useAxiosPublic";
@@ -10,14 +10,31 @@ import { useQuery } from "@tanstack/react-query";
 const Login = () => {
   const {
     handleGoogle,
+    user,
     setUser,
     setImage,
     setName,
     setPhone,
     handleLoginEmailPassword,
   } = useContext(UserMainContext);
-
+  const navigate = useNavigate();
   const AxiosPublic = useAxiosPublic();
+
+  const { data: userForNavigate = {}, error } = useQuery({
+    queryKey: ["userForNavigate"],
+    enabled: !!user?.email,
+    queryFn: async () => {
+      const res = await AxiosPublic.get(`/user/${user?.email}`);
+      if (error) {
+        console.log(error);
+      } else if (res) {
+        console.log("userForNavigate", res);
+      }
+      return res.data;
+    },
+    retry: 3,
+    retryDelay: 2000,
+  });
 
   // handle email login
   const handleSubmit = (e) => {
@@ -115,6 +132,12 @@ const Login = () => {
   };
   //   Dynamic Password Eye
   const [showPassword, setShowPassword] = useState(false);
+
+  if (userForNavigate.role === "hr") {
+    return navigate("/hr/dashboard/home");
+  } else if (userForNavigate.role === "employee") {
+    return navigate("/employee/dashboard/home");
+  }
 
   return (
     <div className="w-full px-4">
