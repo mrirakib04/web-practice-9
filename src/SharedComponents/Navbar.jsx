@@ -1,8 +1,8 @@
 import { useContext, useState } from "react";
-import { FiLogIn } from "react-icons/fi";
+import { FiLogIn, FiLogOut, FiUser } from "react-icons/fi";
 import { RiMenu2Fill } from "react-icons/ri";
 import { Link, NavLink } from "react-router";
-import NavLogo from "./../../public/hr3-logo.jpg";
+import NavLogo from "/hr3-logo.jpg";
 import { Tooltip } from "react-tooltip";
 import { UserMainContext } from "../Context/UserContext";
 import { useQuery } from "@tanstack/react-query";
@@ -29,389 +29,141 @@ const Navbar = () => {
     },
   });
 
-  // dynamic navbar control
-  const { data: userForNav = [], error } = useQuery({
+  const { data: userForNav = [] } = useQuery({
     queryKey: ["userForNav"],
     enabled: !!user?.email,
     queryFn: async () => {
       const res = await AxiosPublic.get(`/user/${user?.email}`);
-      if (error) {
-        console.log(error);
-      } else if (res) {
-        console.log(res);
-      }
       return res.data;
     },
     retry: 3,
     retryDelay: 2000,
   });
-  console.log(userForNav?.role, user?.email);
-  const dynamicMobileNavbar = (role) => {
-    if (role === "hr") {
-      return (
-        <>
-          <NavLink
-            className={({ isActive }) =>
-              isActive
-                ? "border-cyan-400 text-cyan-600 border-2 py-2 px-4 rounded-lg"
-                : "border-2 border-transparent py-2 px-4 rounded-lg"
-            }
-            to="/hr/dashboard/home"
-          >
-            Home
-          </NavLink>
-          <NavLink
-            className={({ isActive }) =>
-              isActive
-                ? "border-cyan-400 text-cyan-600 border-2 py-2 px-4 rounded-lg"
-                : "border-2 border-transparent py-2 px-4 rounded-lg"
-            }
-            to="/hr/dashboard/assetsList"
-          >
-            Assets
-          </NavLink>
-          <NavLink
-            className={({ isActive }) =>
-              isActive
-                ? "border-cyan-400 text-cyan-600 border-2 py-2 px-4 rounded-lg"
-                : "border-2 border-transparent py-2 px-4 rounded-lg"
-            }
-            to="/hr/dashboard/addAsset"
-          >
-            Add-Asset
-          </NavLink>
-          <NavLink
-            className={({ isActive }) =>
-              isActive
-                ? "border-cyan-400 text-cyan-600 border-2 py-2 px-4 rounded-lg"
-                : "border-2 border-transparent py-2 px-4 rounded-lg"
-            }
-            to="/hr/dashboard/requests"
-          >
-            Requests
-          </NavLink>
-          <NavLink
-            className={({ isActive }) =>
-              isActive
-                ? "border-cyan-400 text-cyan-600 border-2 py-2 px-4 rounded-lg"
-                : "border-2 border-transparent py-2 px-4 rounded-lg"
-            }
-            to="/hr/dashboard/employeeList"
-          >
-            Employees
-          </NavLink>
-          <NavLink
-            className={({ isActive }) =>
-              isActive
-                ? "border-cyan-400 text-cyan-600 border-2 py-2 px-4 rounded-lg"
-                : "border-2 border-transparent py-2 px-4 rounded-lg"
-            }
-            to="/hr/dashboard/addEmployee"
-          >
-            Add-Employee
-          </NavLink>
-        </>
-      );
-    } else if (role === "employee") {
-      return (
-        <>
-          <NavLink
-            className={({ isActive }) =>
-              isActive
-                ? "border-cyan-400 text-cyan-600 border-2 py-2 px-4 rounded-lg"
-                : "border-2 border-transparent py-2 px-4 rounded-lg"
-            }
-            to="/employee/dashboard/home"
-          >
-            Home
-          </NavLink>
-          <NavLink
-            className={({ isActive }) =>
-              isActive
-                ? "border-cyan-400 text-cyan-600 border-2 py-2 px-4 rounded-lg"
-                : "border-2 border-transparent py-2 px-4 rounded-lg"
-            }
-            to="/employee/dashboard/assets"
-          >
-            Assets
-          </NavLink>
-          <NavLink
-            className={({ isActive }) =>
-              isActive
-                ? "border-cyan-400 text-cyan-600 border-2 py-2 px-4 rounded-lg"
-                : "border-2 border-transparent py-2 px-4 rounded-lg"
-            }
-            to="/employee/dashboard/request"
-          >
-            Request
-          </NavLink>
-          <NavLink
-            className={({ isActive }) =>
-              isActive
-                ? "border-cyan-400 text-cyan-600 border-2 py-2 px-4 rounded-lg"
-                : "border-2 border-transparent py-2 px-4 rounded-lg"
-            }
-            to="/employee/dashboard/team"
-          >
-            Team
-          </NavLink>
-        </>
-      );
-    }
+
+  // Centralized Style Logic
+  const mobileLinkStyle = ({ isActive }) =>
+    `block py-3 px-5 rounded-xl transition-all font-semibold ${
+      isActive
+        ? "bg-purple-600 text-white shadow-lg shadow-purple-900/40"
+        : "text-slate-300 hover:bg-white/5"
+    }`;
+
+  const desktopLinkStyle = ({ isActive }) =>
+    `relative py-2 px-4 transition-all duration-300 font-semibold ${
+      isActive ? "text-purple-400" : "text-slate-300 hover:text-purple-400"
+    }`;
+
+  const navItems = {
+    hr: [
+      { label: "Home", path: "/hr/dashboard/home" },
+      { label: "Assets", path: "/hr/dashboard/assetsList" },
+      { label: "Add Asset", path: "/hr/dashboard/addAsset" },
+      { label: "Requests", path: "/hr/dashboard/requests" },
+      { label: "Employees", path: "/hr/dashboard/employeeList" },
+      { label: "Add Employee", path: "/hr/dashboard/addEmployee" },
+    ],
+    employee: [
+      { label: "Home", path: "/employee/dashboard/home" },
+      { label: "Assets", path: "/employee/dashboard/assets" },
+      { label: "Request", path: "/employee/dashboard/request" },
+      { label: "Team", path: "/employee/dashboard/team" },
+    ],
+    guest: [
+      { label: "Home", path: "/" },
+      { label: "Join Employee", path: "/JoinAsEmployee" },
+      { label: "Join HR", path: "/JoinAsHR" },
+    ],
   };
-  const dynamicComputerNavbar = (role) => {
-    if (role === "hr") {
-      return (
-        <>
-          <NavLink
-            className={({ isActive }) =>
-              isActive
-                ? "py-1 bg-cyan-200 shadow-lg px-3 rounded-lg border-b-2 border-white text-cyan-950"
-                : "py-1 px-3 rounded-lg border-b-2 border-transparent"
-            }
-            to="/hr/dashboard/home"
-          >
-            Home
-          </NavLink>
-          <NavLink
-            className={({ isActive }) =>
-              isActive
-                ? "py-1 bg-cyan-200 shadow-lg px-3 rounded-lg border-b-2 border-white text-cyan-950"
-                : "py-1 px-3 rounded-lg border-b-2 border-transparent"
-            }
-            to="/hr/dashboard/assetsList"
-          >
-            Assets
-          </NavLink>
-          <NavLink
-            className={({ isActive }) =>
-              isActive
-                ? "py-1 bg-cyan-200 shadow-lg px-3 rounded-lg border-b-2 border-white text-cyan-950"
-                : "py-1 px-3 rounded-lg border-b-2 border-transparent"
-            }
-            to="/hr/dashboard/addAsset"
-          >
-            Add-Asset
-          </NavLink>
-          <NavLink
-            className={({ isActive }) =>
-              isActive
-                ? "py-1 bg-cyan-200 shadow-lg px-3 rounded-lg border-b-2 border-white text-cyan-950"
-                : "py-1 px-3 rounded-lg border-b-2 border-transparent"
-            }
-            to="/hr/dashboard/requests"
-          >
-            Requests
-          </NavLink>
-          <NavLink
-            className={({ isActive }) =>
-              isActive
-                ? "py-1 bg-cyan-200 shadow-lg px-3 rounded-lg border-b-2 border-white text-cyan-950"
-                : "py-1 px-3 rounded-lg border-b-2 border-transparent"
-            }
-            to="/hr/dashboard/employeeList"
-          >
-            Employees
-          </NavLink>
-          <NavLink
-            className={({ isActive }) =>
-              isActive
-                ? "py-1 bg-cyan-200 shadow-lg px-3 rounded-lg border-b-2 border-white text-cyan-950"
-                : "py-1 px-3 rounded-lg border-b-2 border-transparent"
-            }
-            to="/hr/dashboard/addEmployee"
-          >
-            Add-Employee
-          </NavLink>
-        </>
-      );
-    } else if (role === "employee") {
-      return (
-        <>
-          <NavLink
-            className={({ isActive }) =>
-              isActive
-                ? "py-1 bg-cyan-200 shadow-lg px-3 rounded-lg border-b-2 border-white text-cyan-950"
-                : "py-1 px-3 rounded-lg border-b-2 border-transparent"
-            }
-            to="/employee/dashboard/home"
-          >
-            Home
-          </NavLink>
-          <NavLink
-            className={({ isActive }) =>
-              isActive
-                ? "py-1 bg-cyan-200 shadow-lg px-3 rounded-lg border-b-2 border-white text-cyan-950"
-                : "py-1 px-3 rounded-lg border-b-2 border-transparent"
-            }
-            to="/employee/dashboard/assets"
-          >
-            Assets
-          </NavLink>
-          <NavLink
-            className={({ isActive }) =>
-              isActive
-                ? "py-1 bg-cyan-200 shadow-lg px-3 rounded-lg border-b-2 border-white text-cyan-950"
-                : "py-1 px-3 rounded-lg border-b-2 border-transparent"
-            }
-            to="/employee/dashboard/request"
-          >
-            Request
-          </NavLink>
-          <NavLink
-            className={({ isActive }) =>
-              isActive
-                ? "py-1 bg-cyan-200 shadow-lg px-3 rounded-lg border-b-2 border-white text-cyan-950"
-                : "py-1 px-3 rounded-lg border-b-2 border-transparent"
-            }
-            to="/employee/dashboard/team"
-          >
-            Team
-          </NavLink>
-        </>
-      );
-    }
-  };
+
+  const currentRole = user ? userForNav?.role?.toLowerCase() : "guest";
+  const links = navItems[currentRole] || navItems.guest;
 
   return (
-    <div className="bg-white/80 w-full fixed z-50 shadow-lg max-w-[1480px]">
-      <div className="text-black flex justify-between items-center py-4 md:px-6 sm:px-3 px-2 mx-auto">
-        <div className="relative text-xl flex gap-3 font-bold items-center">
-          <div className="flex">
-            <button className="lg:hidden text-2xl" onClick={navShowHide}>
-              <RiMenu2Fill />
-            </button>
-            {navShow && (
-              <div className="absolute lg:hidden border-2 text-base rounded-lg top-14 font-bold bg-gray-100 text-gray-700 p-4">
-                <ul className="flex flex-col gap-2 text-nowrap">
-                  {user ? (
-                    dynamicMobileNavbar(userForNav?.role)
-                  ) : (
-                    <>
-                      <NavLink
-                        className={({ isActive }) =>
-                          isActive
-                            ? "border-cyan-400 text-cyan-600 border-2 py-2 px-4 rounded-lg"
-                            : "border-2 border-transparent py-2 px-4 rounded-lg"
-                        }
-                        to="/"
-                      >
-                        Home
-                      </NavLink>
-                      <NavLink
-                        className={({ isActive }) =>
-                          isActive
-                            ? "border-cyan-400 text-cyan-600 border-2 py-2 px-4 rounded-lg"
-                            : "border-2 border-transparent py-2 px-4 rounded-lg"
-                        }
-                        to="/JoinAsEmployee"
-                      >
-                        Join as Employee
-                      </NavLink>
-                      <NavLink
-                        className={({ isActive }) =>
-                          isActive
-                            ? "border-cyan-400 text-cyan-600 border-2 py-2 px-4 rounded-lg"
-                            : "border-2 border-transparent py-2 px-4 rounded-lg"
-                        }
-                        to="/JoinAsHR"
-                      >
-                        Join as HR
-                      </NavLink>
-                    </>
-                  )}
-                </ul>
-              </div>
-            )}
-          </div>
-          <Link
-            to="/"
-            className="flex shadow-lg px-1 py-1 bg-white rounded-md border-t-4 border-l-4 border-black rounded-tl-none"
+    <nav className="w-full fixed top-0 z-50 bg-[#0F0F12]/80 backdrop-blur-md border-b border-white/5 shadow-2xl">
+      <div className="max-w-7xl mx-auto px-4 flex justify-between items-center py-2">
+        {/* Left: Logo and Mobile Menu */}
+        <div className="flex items-center gap-4">
+          <button
+            className="lg:hidden text-2xl text-purple-500 hover:text-purple-400 transition-colors"
+            onClick={navShowHide}
           >
-            <img
-              data-tooltip-id="my-tooltip"
-              data-tooltip-content={company && company.companyName}
-              data-tooltip-place="bottom"
-              src={company.companyLogo || NavLogo}
-              className="w-10 h-10 rounded-md object-cover"
-              alt="HR3 logo"
-            />
+            <RiMenu2Fill />
+          </button>
+
+          <Link to="/" className="flex items-center gap-3 group">
+            <div className="p-1 bg-purple-600 rounded-lg group-hover:scale-110 transition-transform">
+              <img
+                data-tooltip-id="my-tooltip"
+                data-tooltip-content={company?.companyName || "HR3"}
+                src={company.companyLogo || NavLogo}
+                className="w-8 h-8 rounded-md object-cover bg-white"
+                alt="Logo"
+              />
+            </div>
+            {/* Custom Responsive Title Text Sizes */}
+            <span className="text-2xl sm:text-3xl sm:flex hidden font-extrabold text-white tracking-tight">
+              HR<span className="text-purple-500">3</span>
+            </span>
           </Link>
         </div>
-        <div className="lg:flex font-bold text-base hidden">
-          <ul className="flex gap-1">
-            {user ? (
-              dynamicComputerNavbar(userForNav.role)
-            ) : (
-              <>
-                <NavLink
-                  className={({ isActive }) =>
-                    isActive
-                      ? "py-1 bg-cyan-200 shadow-lg px-3 rounded-lg border-b-2 border-white text-cyan-950"
-                      : "py-1 px-3 rounded-lg border-b-2 border-transparent"
-                  }
-                  to="/"
-                >
-                  Home
-                </NavLink>
-                <NavLink
-                  className={({ isActive }) =>
-                    isActive
-                      ? "py-1 bg-cyan-200 shadow-lg px-3 rounded-lg border-b-2 border-white text-cyan-950"
-                      : "py-1 px-3 rounded-lg border-b-2 border-transparent"
-                  }
-                  to="/JoinAsEmployee"
-                >
-                  Join as Employee
-                </NavLink>
-                <NavLink
-                  className={({ isActive }) =>
-                    isActive
-                      ? "py-1 bg-cyan-200 shadow-lg px-3 rounded-lg border-b-2 border-white text-cyan-950"
-                      : "py-1 px-3 rounded-lg border-b-2 border-transparent"
-                  }
-                  to="/JoinAsHR"
-                >
-                  Join as HR
-                </NavLink>
-              </>
-            )}
-          </ul>
+
+        {/* Center: Desktop Navigation */}
+        <div className="hidden lg:flex items-center gap-2">
+          {links.map((link) => (
+            <NavLink
+              key={link.path}
+              to={link.path}
+              className={desktopLinkStyle}
+            >
+              {({ isActive }) => (
+                <>
+                  {link.label}
+                  {isActive && (
+                    <span className="absolute bottom-0 left-4 right-4 h-0.5 bg-purple-500 rounded-full" />
+                  )}
+                </>
+              )}
+            </NavLink>
+          ))}
         </div>
 
-        <div className="flex items-center text-black">
+        {/* Right: User Profile / Login */}
+        <div className="flex items-center">
           {user ? (
-            <div className="relative flex gap-2 items-center">
-              <a
-                data-tooltip-id="my-tooltip"
-                data-tooltip-content={user.displayName}
+            <div className="relative">
+              <button
+                onClick={profileShowHide}
+                className="flex items-center gap-2 p-1 rounded-full ring-2 ring-purple-500/30 hover:ring-purple-500 transition-all"
               >
-                <button onClick={profileShowHide}>
-                  <img
-                    className="h-12 w-12 object-cover rounded-full border-2 border-black"
-                    src={image || user.photoURL}
-                    alt="User-Photo"
-                  />
-                </button>
-              </a>
-              {showProfile && (
-                <div className="absolute top-16 right-2 flex flex-col gap-1 py-5 px-3 bg-gray-50 rounded-lg border-2">
-                  <Link
-                    to={"/profile"}
-                    className="text-lg font-bold hover:text-black text-gray-700 duration-300"
-                  >
-                    <h2>{user.displayName}</h2>
-                  </Link>
-                  <p className="text-base text-gray-600 font-medium">
-                    {user.email}
-                  </p>
+                <img
+                  className="h-10 w-10 object-cover rounded-full border-2 border-[#0F0F12]"
+                  src={image || user.photoURL}
+                  alt="User"
+                />
+              </button>
 
-                  <div>
+              {showProfile && (
+                <div className="absolute top-14 right-0 w-64 bg-[#1A1A22] border border-white/10 rounded-2xl shadow-2xl p-4 animate-in fade-in slide-in-from-top-2">
+                  <div className="flex flex-col items-center pb-4 border-b border-white/5">
+                    <p className="text-white font-bold text-lg">
+                      {user.displayName}
+                    </p>
+                    <p className="text-slate-400 text-sm truncate w-full text-center">
+                      {user.email}
+                    </p>
+                  </div>
+                  <div className="mt-4 space-y-2">
+                    <Link
+                      to="/profile"
+                      className="flex items-center gap-3 p-2 text-slate-300 hover:text-purple-400 hover:bg-white/5 rounded-lg transition-all"
+                    >
+                      <FiUser /> Profile
+                    </Link>
                     <button
                       onClick={handleLogout}
-                      className="mt-3 text-xl text-left font-bold text-red-600 transition hover:text-red-800"
+                      className="w-full flex items-center gap-3 p-2 text-red-400 hover:bg-red-500/10 rounded-lg transition-all font-semibold"
                     >
-                      Logout
+                      <FiLogOut /> Logout
                     </button>
                   </div>
                 </div>
@@ -420,16 +172,35 @@ const Navbar = () => {
           ) : (
             <Link
               to="/login"
-              className="flex gap-2 items-center px-3 p-1 bg-white rounded-full text-2xl border-2 border-cyan-500"
+              className="flex gap-2 items-center px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-full font-bold transition-all shadow-lg shadow-purple-900/20 active:scale-95"
             >
-              <p className="text-lg font-medium">Login</p>
-              <FiLogIn></FiLogIn>
+              Login <FiLogIn />
             </Link>
           )}
         </div>
       </div>
-      <Tooltip id="my-tooltip" />
-    </div>
+
+      {/* Mobile Drawer Overlay */}
+      {navShow && (
+        <div className="lg:hidden absolute top-20 left-4 right-4 bg-[#1A1A22] border border-white/10 rounded-2xl shadow-2xl p-4 space-y-2">
+          {links.map((link) => (
+            <NavLink
+              key={link.path}
+              to={link.path}
+              onClick={() => setNavShow(false)}
+              className={mobileLinkStyle}
+            >
+              {link.label}
+            </NavLink>
+          ))}
+        </div>
+      )}
+
+      <Tooltip
+        id="my-tooltip"
+        style={{ backgroundColor: "#8B5CF6", borderRadius: "8px" }}
+      />
+    </nav>
   );
 };
 

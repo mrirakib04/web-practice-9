@@ -3,16 +3,21 @@ import Navbar from "./SharedComponents/Navbar";
 import Footer from "./SharedComponents/Footer";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { useEffect } from "react";
 
 const App = () => {
-  AOS.init();
+  // Initialize AOS once when the component mounts
+  useEffect(() => {
+    AOS.init();
+  }, []);
 
   return (
-    <div className="max-w-[1480px] mx-auto flex flex-col items-center">
-      <Navbar></Navbar>
-      <div className="py-10"></div>
-      <Outlet></Outlet>
-      <Footer></Footer>
+    <div className="min-h-screen bg-[#0F0F12] text-slate-200 flex flex-col font-sans selection:bg-purple-500/30 selection:text-purple-200">
+      <Navbar />
+      <div className="py-7"></div>
+      <Outlet />
+
+      <Footer />
     </div>
   );
 };

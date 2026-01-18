@@ -25,7 +25,7 @@ const IsHR = ({ children }) => {
       </div>
     );
   }
-  if (user && hrCheckPoint.role === "hr") {
+  if (user && hrCheckPoint.role?.toLowerCase() === "hr") {
     return children;
   }
 

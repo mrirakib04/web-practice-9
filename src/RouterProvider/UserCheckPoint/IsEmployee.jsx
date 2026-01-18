@@ -25,7 +25,7 @@ const IsEmployee = ({ children }) => {
       </div>
     );
   }
-  if (user && employeeCheckPoint.role === "employee") {
+  if (user && employeeCheckPoint.role?.toLowerCase() === "employee") {
     return children;
   }
 
