@@ -9,7 +9,6 @@ import { useQuery } from "@tanstack/react-query";
 import { IoMdAddCircle } from "react-icons/io";
 import { UserMainContext } from "../../Context/UserContext";
 import Payment from "../../HomeLayout/PaymentPage/Payment";
-import { Helmet } from "react-helmet-async";
 
 const HRAddEmployee = () => {
   const [pagination, setPagination] = useState({
@@ -160,9 +159,6 @@ const HRAddEmployee = () => {
 
   return (
     <div className="sm:mt-10 mt-5 flex flex-col items-center justify-center gap-5 w-full">
-      <Helmet>
-        <title>Add Employee | HR | HR3 Managements</title>
-      </Helmet>
       <div className="w-full flex flex-col items-center">
         <div className="flex flex-col items-center">
           <h2 className="lg:text-4xl sm:text-3xl text-2xl font-semibold">

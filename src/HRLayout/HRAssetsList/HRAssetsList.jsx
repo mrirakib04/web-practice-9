@@ -12,7 +12,6 @@ import {
 import Swal from "sweetalert2";
 import { DNA } from "react-loader-spinner";
 import { useNavigate } from "react-router";
-import { Helmet } from "react-helmet-async";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 
 const HRAssetsList = () => {
@@ -124,9 +123,6 @@ const HRAssetsList = () => {
 
   return (
     <div className="w-full flex flex-col items-center sm:gap-5 gap-2 px-5">
-      <Helmet>
-        <title>Assets | HR | HR3 Managements</title>
-      </Helmet>
       <div className="flex flex-col items-center sm:mt-10 mt-5">
         <h2 className="lg:text-4xl sm:text-3xl text-2xl font-semibold">
           Your Assets List

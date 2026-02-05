@@ -10,7 +10,6 @@ import useAxiosPrivate from "../../Hooks/useAxiosPrivate";
 import { UserMainContext } from "../../Context/UserContext";
 import { useQuery } from "@tanstack/react-query";
 import PropTypes from "prop-types";
-import { Helmet } from "react-helmet-async";
 import { useLocation, useNavigate } from "react-router";
 
 // Load your Stripe public key
@@ -170,9 +169,6 @@ const Payment = ({ rerefetchHR }) => {
 
   return (
     <div className="flex justify-center items-center bg-white mt-10 w-full">
-      <Helmet>
-        <title>Payment | HR3 Managements</title>
-      </Helmet>
       <div className="bg-white shadow-md rounded-lg p-6 md:w-1/2 lg:w-1/3 w-full">
         <h1 className="text-2xl font-bold text-center mb-6 text-gray-800">
           Pay Your Package Charge

@@ -16,7 +16,6 @@ import {
   PDFDownloadLink,
 } from "@react-pdf/renderer";
 import PropTypes from "prop-types";
-import { Helmet } from "react-helmet-async";
 
 // handle print
 
@@ -215,9 +214,6 @@ const EmployeeAssets = () => {
 
   return (
     <div className="w-full flex flex-col items-center sm:mt-10 mt-5">
-      <Helmet>
-        <title>Assets | Employee | HR3 Managements</title>
-      </Helmet>
       <div className="flex flex-col items-center">
         <h2 className="lg:text-4xl sm:text-3xl text-2xl font-semibold">
           All Asset Requests

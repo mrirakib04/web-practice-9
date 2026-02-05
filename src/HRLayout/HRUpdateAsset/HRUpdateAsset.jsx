@@ -9,7 +9,6 @@ import { useParams } from "react-router";
 import useAxiosPrivate from "../../Hooks/useAxiosPrivate";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { Helmet } from "react-helmet-async";
 
 const HRUpdateAsset = () => {
   const params = useParams();
@@ -72,9 +71,6 @@ const HRUpdateAsset = () => {
 
   return (
     <div className="w-full flex flex-col items-center sm:gap-5 gap-2 px-5">
-      <Helmet>
-        <title>Update Asset | HR | HR3 Managements</title>
-      </Helmet>
       <div className="flex flex-col items-center sm:mt-10 mt-5">
         <h2 className="lg:text-4xl sm:text-3xl text-2xl font-semibold">
           Update Asset

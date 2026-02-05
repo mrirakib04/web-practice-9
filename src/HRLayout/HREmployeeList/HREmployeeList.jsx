@@ -5,7 +5,6 @@ import { useQuery } from "@tanstack/react-query";
 import { MdReportGmailerrorred } from "react-icons/md";
 import { FaTrashAlt } from "react-icons/fa";
 import Swal from "sweetalert2";
-import { Helmet } from "react-helmet-async";
 
 const HREmployeeList = () => {
   const AxiosSecure = useAxiosPrivate();
@@ -53,9 +52,6 @@ const HREmployeeList = () => {
 
   return (
     <div className="w-full flex flex-col items-center gap-5 sm:mt-10 mt-5">
-      <Helmet>
-        <title>Employees | HR | HR3 Managements</title>
-      </Helmet>
       <div className="flex flex-col items-center">
         <h2 className="lg:text-4xl sm:text-3xl text-2xl font-semibold">
           Your Employees

@@ -6,7 +6,6 @@ import { DNA } from "react-loader-spinner";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import { FaSearchPlus } from "react-icons/fa";
-import { Helmet } from "react-helmet-async";
 
 const EmployeeAssetsRequest = () => {
   const { user } = useContext(UserMainContext);
@@ -172,9 +171,6 @@ const EmployeeAssetsRequest = () => {
 
   return (
     <div className="w-full flex flex-col items-center sm:mt-10 mt-5">
-      <Helmet>
-        <title>Request | Employee | HR3 Managements</title>
-      </Helmet>
       <div className="flex flex-col items-center">
         <h2 className="lg:text-4xl sm:text-3xl text-2xl font-semibold">
           Request For Asset

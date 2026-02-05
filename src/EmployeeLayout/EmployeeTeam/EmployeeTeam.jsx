@@ -4,7 +4,6 @@ import { useContext } from "react";
 import { UserMainContext } from "../../Context/UserContext";
 import { MdReportGmailerrorred } from "react-icons/md";
 import { DNA } from "react-loader-spinner";
-import { Helmet } from "react-helmet-async";
 
 const EmployeeTeam = () => {
   const { user } = useContext(UserMainContext);
@@ -32,9 +31,6 @@ const EmployeeTeam = () => {
 
   return (
     <div className="w-full flex flex-col items-center gap-5 sm:mt-10 mt-5">
-      <Helmet>
-        <title>Team | Employee | HR3 Managements</title>
-      </Helmet>
       <div className="flex flex-col items-center">
         <h2 className="lg:text-4xl sm:text-3xl text-2xl font-semibold">
           Your Team

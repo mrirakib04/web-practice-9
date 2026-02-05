@@ -79,7 +79,7 @@ const Navbar = () => {
   const links = navItems[currentRole] || navItems.guest;
 
   return (
-    <nav className="w-full fixed top-0 z-50 bg-[#0F0F12]/80 backdrop-blur-md border-b border-white/5 shadow-2xl">
+    <nav className="w-full max-w-[1480px] mx-auto overflow-hidden fixed top-0 z-50 bg-[#0F0F12]/80 backdrop-blur-md border-b border-white/5 shadow-2xl">
       <div className="max-w-7xl mx-auto px-4 flex justify-between items-center py-2">
         {/* Left: Logo and Mobile Menu */}
         <div className="flex items-center gap-4">

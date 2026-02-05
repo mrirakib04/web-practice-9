@@ -5,7 +5,6 @@ import { useQuery } from "@tanstack/react-query";
 import MyPendingRequests from "./EmployeeHomeComponents/MyPendingRequests";
 import MyMonthlyRequests from "./EmployeeHomeComponents/MyMonthlyRequests";
 import ExtraCalender from "./EmployeeHomeComponents/ExtraCalender";
-import { Helmet } from "react-helmet-async";
 
 const EmployeeHome = () => {
   const { user, name } = useContext(UserMainContext);
@@ -22,9 +21,6 @@ const EmployeeHome = () => {
 
   return (
     <div className="w-full flex flex-col items-center">
-      <Helmet>
-        <title>Home | Employee | HR3 Managements</title>
-      </Helmet>
       <div className="w-full py-10 text-center bg-gradient-to-r from-purple-100 via-white to-purple-100">
         <h3 className="lg:text-4xl sm:text-3xl text-2xl font-semibold">
           Welcome, <span className="italic font-bold">{name}</span>!

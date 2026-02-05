@@ -12,7 +12,7 @@ const App = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#0F0F12] text-slate-200 flex flex-col font-sans selection:bg-purple-500/30 selection:text-purple-200">
+    <div className="min-h-screen max-w-[1480px] mx-auto overflow-hidden bg-[#0F0F12] text-slate-200 flex flex-col font-sans selection:bg-purple-500/30 selection:text-purple-200">
       <Navbar />
       <div className="py-7"></div>
       <Outlet />

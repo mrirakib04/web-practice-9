@@ -7,7 +7,6 @@ import { useQuery } from "@tanstack/react-query";
 import { DNA } from "react-loader-spinner";
 import { Divider } from "@mui/material";
 import Swal from "sweetalert2";
-import { Helmet } from "react-helmet-async";
 
 const HRAllRequests = () => {
   const { user } = useContext(UserMainContext);
@@ -166,9 +165,6 @@ const HRAllRequests = () => {
 
   return (
     <div className="w-full flex flex-col items-center gap-5 sm:mt-10 mt-5">
-      <Helmet>
-        <title>Requests | HR | HR3 Managements</title>
-      </Helmet>
       <div className="flex flex-col items-center">
         <h2 className="lg:text-4xl sm:text-3xl text-2xl font-semibold">
           All Requests
